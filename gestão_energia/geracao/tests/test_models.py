@@ -40,7 +40,7 @@ class TesteFaturamento(TestCase):
             extrairEnergiaInjetada=cemig.extrairEnergiaInjetada,
             extrairCustoDisponibilidade=cemig.extrairCustoDisponibilidade,
             obterIluminacaoPublica=cemig.obterIluminacaoPublica,
-            desconto=0.2,
+            desconto=20,
             bonus=30)
         self.faturamentoCharlesAbril.carregarConta(
             conta_pdf='geracao/tests/FaturaCEMIG_11042022_AP.pdf',
@@ -50,7 +50,7 @@ class TesteFaturamento(TestCase):
             extrairEnergiaInjetada=cemig.extrairEnergiaInjetada,
             extrairCustoDisponibilidade=cemig.extrairCustoDisponibilidade,
             obterIluminacaoPublica=cemig.obterIluminacaoPublica,
-            desconto=0.2,
+            desconto=20,
             bonus=20)
         self.faturamentoRJAbril.carregarConta(
             conta_pdf='geracao/tests/FaturaCEMIG_11042022.pdf',
@@ -60,7 +60,7 @@ class TesteFaturamento(TestCase):
             extrairEnergiaInjetada=cemig.extrairEnergiaInjetada,
             extrairCustoDisponibilidade=cemig.extrairCustoDisponibilidade,
             obterIluminacaoPublica=cemig.obterIluminacaoPublica,
-            desconto=0.2,
+            desconto=20,
             bonus=50)
         self.faturamentoEstovadaoAbril.carregarConta(
             conta_pdf='geracao/tests/556815429578.pdf',
@@ -70,7 +70,7 @@ class TesteFaturamento(TestCase):
             extrairEnergiaInjetada=cemig.extrairEnergiaInjetada,
             extrairCustoDisponibilidade=cemig.extrairCustoDisponibilidade,
             obterIluminacaoPublica=cemig.obterIluminacaoPublica,
-            desconto=0.2,
+            desconto=20,
             bonus=0)
         self.faturamentoRosi.carregarConta(
             conta_pdf='geracao/tests/876611782018.pdf',
@@ -80,13 +80,17 @@ class TesteFaturamento(TestCase):
             extrairEnergiaInjetada=cemig.extrairEnergiaInjetada,
             extrairCustoDisponibilidade=cemig.extrairCustoDisponibilidade,
             obterIluminacaoPublica=cemig.obterIluminacaoPublica,
-            desconto=0.2,
+            desconto=20,
             bonus=0)
-
-        #self.faturamentoGoitacazesAbril.imprimir()
-
         #print("setUp: Run once for every test method to setup clean data.")
         pass
+
+    def test_extrairInstalacao(self):        
+        self.assertEqual(self.faturamentoGoitacazesAbril.porte, 'Monofásico')
+        self.assertEqual(self.faturamentoCharlesAbril.porte, 'Bifásico')
+        self.assertEqual(self.faturamentoRJAbril.porte, 'Trifásico')
+        self.assertEqual(self.faturamentoEstovadaoAbril.porte, 'Trifásico')
+        self.assertEqual(self.faturamentoRosi.porte, 'Bifásico')
 
     def test_extrairPorte(self):
         print("Testando método extrairPorte()")

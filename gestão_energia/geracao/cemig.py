@@ -126,6 +126,27 @@ def extrairEnergiaInjetada(pag1: str) -> float:
     return (injetada)
 
 
+def extrairNumeroInstalacao(pag1: str) -> int:
+    '''
+    Retorna o número da instalação daquela fatura
+    ----------
+    Parâmetro:
+    str conténdo o texto com a conta de luz
+    ----------
+
+    Saída:
+    ----------
+    int contendo o número da instalação
+    ----------
+    '''
+
+    frase_contendo_numeros_instalacao_e_cliente = extrairExpressaoRegular(
+        r'INSTALAÇÃO[0-9]+Referente', pag1)[0]
+    numero_instalacao = int(frase_contendo_numeros_instalacao_e_cliente[20:29])
+    return numero_instalacao
+
+    
+
 def extrairCustoDisponibilidade(pag1: str) -> float:
     '''
     Retorna o custo de indisponibildiade cobrado na fatura.

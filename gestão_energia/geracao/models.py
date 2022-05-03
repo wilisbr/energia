@@ -59,6 +59,8 @@ class Faturamento(models.Model):
         Valor cobrado pela prefeitura a título de iluminação pública
     injetada : decimal
         Quantidade injetada na conta do cliente, em khw
+    instalacao: int
+        Número da instalação
     porte : str
         Pode ser Monofásico, Bifásico ou Trifásico
     tarifa : decimal
@@ -88,68 +90,54 @@ class Faturamento(models.Model):
         Prints the person's name and age.
     """
     conta_pdf = models.FileField(upload_to='contas_pdf', null=True, blank=True)
-    desconto = models.DecimalField(decimal_places=2,
-                                   max_digits=10,
+    desconto = models.FloatField(
                                    null=False,
                                    blank=False,
                                    default=0)
-    bonus = models.DecimalField(decimal_places=2,
-                                max_digits=10,
+    bonus = models.FloatField(
                                 null=False,
                                 blank=False,
                                 default=0)
-    consumoSimulado = models.DecimalField(decimal_places=2,
-                                          max_digits=10,
+    consumoSimulado = models.FloatField(
                                           null=True,
                                           blank=True)
-    custo_disponibilidade = models.DecimalField(decimal_places=2,
-                                                max_digits=10,
+    custo_disponibilidade = models.FloatField(
                                                 null=True,
                                                 blank=True)
 
-    consumo_mes = models.DecimalField(decimal_places=2,
-                                      max_digits=10,
+    consumo_mes = models.FloatField(
                                       null=True,
                                       blank=True)
-    energia_da_concessionaria = models.DecimalField(decimal_places=2,
-                                                    max_digits=10,
+    energia_da_concessionaria = models.FloatField(
                                                     null=True,
                                                     blank=True)
-    franquia = models.DecimalField(decimal_places=2,
-                                   max_digits=10,
+    franquia = models.FloatField(
                                    null=True,
                                    blank=True)
-    iluminacaoPublica = models.DecimalField(decimal_places=2,
-                                            max_digits=10,
+    iluminacaoPublica = models.FloatField(
                                             null=True,
                                             blank=True)
-    injetada = models.DecimalField(decimal_places=2,
-                                   max_digits=10,
+    injetada = models.FloatField(
                                    null=True,
                                    blank=True)
+    instalacao = models.IntegerField (null=True, blank=True)
     porte = models.CharField(max_length=15, null=True, blank=True)
-    tarifa = models.DecimalField(decimal_places=2,
-                                 max_digits=10,
+    tarifa = models.FloatField(
                                  null=True,
                                  blank=True)
-    tarifaInjetada = models.DecimalField(decimal_places=2,
-                                         max_digits=10,
+    tarifaInjetada = models.FloatField(
                                          null=True,
                                          blank=True)
-    totalSimulado = models.DecimalField(decimal_places=2,
-                                        max_digits=10,
+    totalSimulado = models.FloatField(
                                         null=True,
                                         blank=True)
-    totalPagar = models.DecimalField(decimal_places=2,
-                                     max_digits=10,
+    totalPagar = models.FloatField(
                                      null=True,
                                      blank=True)
-    valorConsumoSimulado = models.DecimalField(decimal_places=2,
-                                               max_digits=10,
+    valorConsumoSimulado = models.FloatField(
                                                null=True,
                                                blank=True)
-    valorInjetado = models.DecimalField(decimal_places=2,
-                                        max_digits=10,
+    valorInjetado = models.FloatField(
                                         null=True,
                                         blank=True)
 
@@ -179,6 +167,9 @@ class Faturamento(models.Model):
         extrairHistoricoConsumo: função
             parâmetro: string que contém a conta de energia
             saída: float[] contendo o histórico de consumo
+        extrairInstalacao: função
+            parâmetro: string que contém a conta de energia
+            saída: Integer contendo o número da instalação
         extrairEnergiaInjetada: função
             parâmetro: string que contém a conta de energia
             saída: float com a quantidade de energia injetada pelo gerador
@@ -188,6 +179,8 @@ class Faturamento(models.Model):
         obterIluminacaoPublica: função
             parâmetro: string que contém a conta de energia
             saída: float contendo o valor cobrado pela iluminação pública
+        
+        
 
         ----------
         Atributos atualizados pelo método:
@@ -199,6 +192,7 @@ class Faturamento(models.Model):
         injetada
         custo_disponibilidade
         iluminacaoPublica
+        instalacao
         tarifa
         ----------
 
@@ -206,24 +200,27 @@ class Faturamento(models.Model):
         pdf2txt = kwargs.get('pdf2txt', False)
         extrairPorte = kwargs.get('extrairPorte', False)
         extrairHistoricoConsumo = kwargs.get('extrairHistoricoConsumo', False)
+        extrairNumeroInstalacao = kwargs.get('extrairNumeroInstalacao', False)
         extrairEnergiaInjetada = kwargs.get('extrairEnergiaInjetada', False)
         extrairCustoDisponibilidade = kwargs.get('extrairCustoDisponibilidade',
                                                  False)
         obterIluminacaoPublica = kwargs.get('obterIluminacaoPublica', False)
-
-        if (kwargs.get('conta_pdf') == None):
-            print('Necessário informar o parâmetro "conta"')
+        
+        if ((kwargs.get('conta_pdf') == None) and (self.conta_pdf==None)):
+            print('Necessário informar o parâmetro "conta" ou preencher o atributo conta_pdf')
             return None
 
-        self.conta_pdf = kwargs.get('conta_pdf')
-        self.desconto = kwargs.get('desconto', 0)
-        self.bonus = kwargs.get('bonus', 0)
-
+        self.conta_pdf = kwargs.get('conta_pdf', self.conta_pdf)
+        self.desconto = kwargs.get('desconto', self.desconto)
+        self.bonus = kwargs.get('bonus', self.bonus)
+        
         conta_txt = pdf2txt(self.conta_pdf.path, 0)
-
+        print (conta_txt)
         self.porte = extrairPorte(conta_txt)
 
         self.injetada = extrairEnergiaInjetada(conta_txt)
+        self.instalacao = extrairNumeroInstalacao(conta_txt)
+        print (self.instalacao)
         self.custo_disponibilidade = extrairCustoDisponibilidade(conta_txt)[0]
         self.energia_da_concessionaria = extrairCustoDisponibilidade(
             conta_txt)[1]
@@ -261,6 +258,7 @@ class Faturamento(models.Model):
 
         #Tarifa cobrada do cliente, com o desconto definido
         self.tarifaInjetada = ((100 - self.desconto)/100) * self.tarifa
+        
 
         #Valor que será cobrado do cliente pela energia injetada
         self.valorInjetado = self.tarifaInjetada * self.injetada
@@ -326,14 +324,15 @@ class Faturamento(models.Model):
     
     def save(self, *args, **kwargs):
         print ('Salvando e alterando o objeto Faturamento')
-        self.carregarConta(
-            conta_pdf='geracao/tests/noname.pdf',
+        super().save(*args, **kwargs) #Tem que salvar antes, para gravar o arquivo pdf que foi modificado
+        print(self.conta_pdf)
+        #self.conta_pdf='geracao/tests/noname.pdf'
+        self.carregarConta(      
             pdf2txt=cemig.pdf2txt,
             extrairPorte=cemig.extrairPorte,
             extrairHistoricoConsumo=cemig.extrairHistoricoConsumo,
             extrairEnergiaInjetada=cemig.extrairEnergiaInjetada,
             extrairCustoDisponibilidade=cemig.extrairCustoDisponibilidade,
             obterIluminacaoPublica=cemig.obterIluminacaoPublica,
-            desconto=0.2,
-            bonus=30)
+            extrairNumeroInstalacao=cemig.extrairNumeroInstalacao)
         super().save(*args, **kwargs)
