@@ -215,12 +215,10 @@ class Faturamento(models.Model):
         self.bonus = kwargs.get('bonus', self.bonus)
         
         conta_txt = pdf2txt(self.conta_pdf.path, 0)
-        print (conta_txt)
         self.porte = extrairPorte(conta_txt)
 
         self.injetada = extrairEnergiaInjetada(conta_txt)
         self.instalacao = extrairNumeroInstalacao(conta_txt)
-        print (self.instalacao)
         self.custo_disponibilidade = extrairCustoDisponibilidade(conta_txt)[0]
         self.energia_da_concessionaria = extrairCustoDisponibilidade(
             conta_txt)[1]

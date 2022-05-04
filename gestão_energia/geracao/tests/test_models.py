@@ -40,6 +40,7 @@ class TesteFaturamento(TestCase):
             extrairEnergiaInjetada=cemig.extrairEnergiaInjetada,
             extrairCustoDisponibilidade=cemig.extrairCustoDisponibilidade,
             obterIluminacaoPublica=cemig.obterIluminacaoPublica,
+            extrairNumeroInstalacao=cemig.extrairNumeroInstalacao,
             desconto=20,
             bonus=30)
         self.faturamentoCharlesAbril.carregarConta(
@@ -50,6 +51,7 @@ class TesteFaturamento(TestCase):
             extrairEnergiaInjetada=cemig.extrairEnergiaInjetada,
             extrairCustoDisponibilidade=cemig.extrairCustoDisponibilidade,
             obterIluminacaoPublica=cemig.obterIluminacaoPublica,
+            extrairNumeroInstalacao=cemig.extrairNumeroInstalacao,
             desconto=20,
             bonus=20)
         self.faturamentoRJAbril.carregarConta(
@@ -60,6 +62,7 @@ class TesteFaturamento(TestCase):
             extrairEnergiaInjetada=cemig.extrairEnergiaInjetada,
             extrairCustoDisponibilidade=cemig.extrairCustoDisponibilidade,
             obterIluminacaoPublica=cemig.obterIluminacaoPublica,
+            extrairNumeroInstalacao=cemig.extrairNumeroInstalacao,
             desconto=20,
             bonus=50)
         self.faturamentoEstovadaoAbril.carregarConta(
@@ -70,6 +73,7 @@ class TesteFaturamento(TestCase):
             extrairEnergiaInjetada=cemig.extrairEnergiaInjetada,
             extrairCustoDisponibilidade=cemig.extrairCustoDisponibilidade,
             obterIluminacaoPublica=cemig.obterIluminacaoPublica,
+            extrairNumeroInstalacao=cemig.extrairNumeroInstalacao,
             desconto=20,
             bonus=0)
         self.faturamentoRosi.carregarConta(
@@ -80,6 +84,7 @@ class TesteFaturamento(TestCase):
             extrairEnergiaInjetada=cemig.extrairEnergiaInjetada,
             extrairCustoDisponibilidade=cemig.extrairCustoDisponibilidade,
             obterIluminacaoPublica=cemig.obterIluminacaoPublica,
+            extrairNumeroInstalacao=cemig.extrairNumeroInstalacao,
             desconto=20,
             bonus=0)
         #print("setUp: Run once for every test method to setup clean data.")
@@ -170,3 +175,13 @@ class TesteFaturamento(TestCase):
         self.assertEqual(self.faturamentoEstovadaoAbril.totalSimulado,
                          298.85106222)
         self.assertEqual(self.faturamentoRosi.totalSimulado, 725.577676)
+
+    def test_totalSimulado(self):
+        self.assertEqual(self.faturamentoGoitacazesAbril.instalacao,
+                         3004078633)
+        self.assertEqual(self.faturamentoCharlesAbril.instalacao, 3012091635)
+        self.assertEqual(self.faturamentoRJAbril.instalacao,
+                         3004549294)
+        self.assertEqual(self.faturamentoEstovadaoAbril.instalacao,
+                         3010475009)
+        self.assertEqual(self.faturamentoRosi.instalacao, 3002307732)

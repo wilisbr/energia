@@ -141,8 +141,10 @@ def extrairNumeroInstalacao(pag1: str) -> int:
     '''
 
     frase_contendo_numeros_instalacao_e_cliente = extrairExpressaoRegular(
-        r'INSTALAÇÃO[0-9]+Referente', pag1)[0]
-    numero_instalacao = int(frase_contendo_numeros_instalacao_e_cliente[20:29])
+        r'[0-9]{10}Referente', pag1)[0]
+    numero_instalacao = int (extrairExpressaoRegular(
+        r'[0-9]+', frase_contendo_numeros_instalacao_e_cliente)[0]) 
+    #int(frase_contendo_numeros_instalacao_e_cliente[0:10])
     return numero_instalacao
 
     
