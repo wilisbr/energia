@@ -63,6 +63,8 @@ class Faturamento(models.Model):
         Número da instalação
     porte : str
         Pode ser Monofásico, Bifásico ou Trifásico
+    referencia: str
+        Mês/ano de referência da fatura MMM/AAAA (ex: ABR/2022)
     tarifa : decimal
         Tarifa cobrada pela distribuidora, em R$ por kwh
     tarifaInjetada : decimal
@@ -79,6 +81,8 @@ class Faturamento(models.Model):
     valorInjetado : decimal
         Valor referente à quantidade de kwh injetada na instalação do cliente. 
         tarifaInjetada * injetada
+    vencimento: str
+        Dia/Mês/ano de vencimento da fatura DD/MM/AAAA (ex: 11/05/2022)
     usuario : str 
         Nome do usuario da plataforma que cadastrou a fatura
     cpf_cliente : Int
@@ -122,6 +126,7 @@ class Faturamento(models.Model):
                                    blank=True)
     instalacao = models.IntegerField (null=True, blank=True)
     porte = models.CharField(max_length=15, null=True, blank=True)
+    referencia = models.CharField (max_length=7, null=True, blank=True)
     tarifa = models.FloatField(
                                  null=True,
                                  blank=True)
@@ -140,7 +145,7 @@ class Faturamento(models.Model):
     valorInjetado = models.FloatField(
                                         null=True,
                                         blank=True)
-
+    vencimento = models.CharField (max_length=12, null=True, blank=True)
     usuario = models.CharField(max_length=40, null=True, blank=True)
     cpf_cliente = models.ForeignKey(Cliente, models.SET_NULL,
         blank=True,
@@ -148,7 +153,7 @@ class Faturamento(models.Model):
 
     def carregarConta(self, *args, **kwargs):
         '''
-        Carrega uma conta de energia no objeto, extraindo do PDF os valores e armzenando-os nos atributos.
+        Carrega uma conta de energia no objeto, extraindo do PDF os valores e armazenando-os nos atributos.
 
         ----------
         Parâmetros:
@@ -170,15 +175,22 @@ class Faturamento(models.Model):
         extrairInstalacao: função
             parâmetro: string que contém a conta de energia
             saída: Integer contendo o número da instalação
+        extrairReferencia: função
+            parâmetro: string que contém a conta de energia
+            saída: string contendo o mês e o ano da fatura MMM/AAAA (ex: ABR/2022)
         extrairEnergiaInjetada: função
             parâmetro: string que contém a conta de energia
             saída: float com a quantidade de energia injetada pelo gerador
         extrairCustoDisponibilidade: função
             parâmetro: string que contém a conta de energia
             saída: float contendo o custo de disponibilidade
+        extrairVencimento: função
+            parâmetro: string que contém a conta de energia
+            saída: string contendo o mês e o ano da fatura DD/MM/AAAA
         obterIluminacaoPublica: função
             parâmetro: string que contém a conta de energia
             saída: float contendo o valor cobrado pela iluminação pública
+        
         
         
 
@@ -193,6 +205,8 @@ class Faturamento(models.Model):
         custo_disponibilidade
         iluminacaoPublica
         instalacao
+        referencia
+        vencimento
         tarifa
         ----------
 
@@ -202,6 +216,8 @@ class Faturamento(models.Model):
         extrairHistoricoConsumo = kwargs.get('extrairHistoricoConsumo', False)
         extrairNumeroInstalacao = kwargs.get('extrairNumeroInstalacao', False)
         extrairEnergiaInjetada = kwargs.get('extrairEnergiaInjetada', False)
+        extrairReferencia = kwargs.get('extrairReferencia', False)
+        extrairVencimento = kwargs.get('extrairVencimento', False)
         extrairCustoDisponibilidade = kwargs.get('extrairCustoDisponibilidade',
                                                  False)
         obterIluminacaoPublica = kwargs.get('obterIluminacaoPublica', False)
@@ -215,6 +231,7 @@ class Faturamento(models.Model):
         self.bonus = kwargs.get('bonus', self.bonus)
         
         conta_txt = pdf2txt(self.conta_pdf.path, 0)
+        #print (conta_txt)
         self.porte = extrairPorte(conta_txt)
 
         self.injetada = extrairEnergiaInjetada(conta_txt)
@@ -222,7 +239,9 @@ class Faturamento(models.Model):
         self.custo_disponibilidade = extrairCustoDisponibilidade(conta_txt)[0]
         self.energia_da_concessionaria = extrairCustoDisponibilidade(
             conta_txt)[1]
+        self.referencia= extrairReferencia(conta_txt)
         self.tarifa = extrairCustoDisponibilidade(conta_txt)[2]
+        self.vencimento = extrairVencimento(conta_txt)
         self.iluminacaoPublica = obterIluminacaoPublica(conta_txt)
         consumos_mensais = extrairHistoricoConsumo(conta_txt)
         self.consumo_mes = consumos_mensais[0]

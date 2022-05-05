@@ -41,6 +41,8 @@ class TesteFaturamento(TestCase):
             extrairCustoDisponibilidade=cemig.extrairCustoDisponibilidade,
             obterIluminacaoPublica=cemig.obterIluminacaoPublica,
             extrairNumeroInstalacao=cemig.extrairNumeroInstalacao,
+            extrairReferencia=cemig.extrairReferencia,
+            extrairVencimento=cemig.extrairVencimento,
             desconto=20,
             bonus=30)
         self.faturamentoCharlesAbril.carregarConta(
@@ -52,8 +54,11 @@ class TesteFaturamento(TestCase):
             extrairCustoDisponibilidade=cemig.extrairCustoDisponibilidade,
             obterIluminacaoPublica=cemig.obterIluminacaoPublica,
             extrairNumeroInstalacao=cemig.extrairNumeroInstalacao,
+            extrairReferencia=cemig.extrairReferencia,
+            extrairVencimento=cemig.extrairVencimento,
             desconto=20,
-            bonus=20)
+            bonus=20),
+            
         self.faturamentoRJAbril.carregarConta(
             conta_pdf='geracao/tests/FaturaCEMIG_11042022.pdf',
             pdf2txt=cemig.pdf2txt,
@@ -63,6 +68,8 @@ class TesteFaturamento(TestCase):
             extrairCustoDisponibilidade=cemig.extrairCustoDisponibilidade,
             obterIluminacaoPublica=cemig.obterIluminacaoPublica,
             extrairNumeroInstalacao=cemig.extrairNumeroInstalacao,
+            extrairReferencia=cemig.extrairReferencia,
+            extrairVencimento=cemig.extrairVencimento,
             desconto=20,
             bonus=50)
         self.faturamentoEstovadaoAbril.carregarConta(
@@ -74,6 +81,8 @@ class TesteFaturamento(TestCase):
             extrairCustoDisponibilidade=cemig.extrairCustoDisponibilidade,
             obterIluminacaoPublica=cemig.obterIluminacaoPublica,
             extrairNumeroInstalacao=cemig.extrairNumeroInstalacao,
+            extrairReferencia=cemig.extrairReferencia,
+            extrairVencimento=cemig.extrairVencimento,
             desconto=20,
             bonus=0)
         self.faturamentoRosi.carregarConta(
@@ -85,6 +94,8 @@ class TesteFaturamento(TestCase):
             extrairCustoDisponibilidade=cemig.extrairCustoDisponibilidade,
             obterIluminacaoPublica=cemig.obterIluminacaoPublica,
             extrairNumeroInstalacao=cemig.extrairNumeroInstalacao,
+            extrairReferencia=cemig.extrairReferencia,
+            extrairVencimento=cemig.extrairVencimento,
             desconto=20,
             bonus=0)
         #print("setUp: Run once for every test method to setup clean data.")
@@ -176,7 +187,7 @@ class TesteFaturamento(TestCase):
                          298.85106222)
         self.assertEqual(self.faturamentoRosi.totalSimulado, 725.577676)
 
-    def test_totalSimulado(self):
+    def test_instalacao(self):
         self.assertEqual(self.faturamentoGoitacazesAbril.instalacao,
                          3004078633)
         self.assertEqual(self.faturamentoCharlesAbril.instalacao, 3012091635)
@@ -185,3 +196,24 @@ class TesteFaturamento(TestCase):
         self.assertEqual(self.faturamentoEstovadaoAbril.instalacao,
                          3010475009)
         self.assertEqual(self.faturamentoRosi.instalacao, 3002307732)
+    
+    def test_extrairReferencia(self):
+        self.assertEqual(self.faturamentoGoitacazesAbril.referencia,
+                         'MAR/2022')
+        self.assertEqual(self.faturamentoCharlesAbril.referencia, 'MAR/2022')
+        self.assertEqual(self.faturamentoRJAbril.referencia,
+                         'MAR/2022')
+        self.assertEqual(self.faturamentoEstovadaoAbril.referencia,
+                         'MAR/2022')
+        self.assertEqual(self.faturamentoRosi.referencia, 'JAN/2022')
+
+    def test_extrairVencimento(self):
+        self.assertEqual(self.faturamentoGoitacazesAbril.vencimento,
+                         '11/04/2022')
+        self.assertEqual(self.faturamentoCharlesAbril.vencimento, '11/04/2022')
+        self.assertEqual(self.faturamentoRJAbril.vencimento,
+                         '11/04/2022')
+        self.assertEqual(self.faturamentoEstovadaoAbril.vencimento,
+                         '11/04/2022')
+        self.assertEqual(self.faturamentoRosi.vencimento, '11/02/2022')
+

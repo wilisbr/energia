@@ -58,6 +58,40 @@ def pdf2txt(arquivo: str, pagina: int) -> str:
     pag1 = fileReader.getPage(pagina).extractText()
     return (pag1)
 
+def extrairReferencia(pag1: str) -> str:
+    '''
+    Retorna o mês base da fatura
+
+    ----------
+    Parâmetro:
+    str contendo o texto com a conta de luz
+    ----------
+
+    Saída:
+    ----------
+    str contendo MMM/AAAA (ex: ABR/2022)
+    ----------
+    '''
+    texto_contendo_referencia=extrairExpressaoRegular(r'\)[A-Z]{3}\/[\d]{4}', pag1)[0]
+    referencia=extrairExpressaoRegular(r'[A-Z]{3}\/[\d]{4}', pag1)[0]
+    return (referencia)
+
+def extrairVencimento(pag1: str) -> str:
+    '''
+    Retorna a data de vencimento da fatura
+
+    ----------
+    Parâmetro:
+    str contendo o texto com a conta de luz
+    ----------
+
+    Saída:
+    ----------
+    str contendo DD/MM/AAAA (ex: 11/04/2022)
+    ----------
+    '''
+    vencimento=extrairExpressaoRegular(r'\d{2}\/\d{2}\/\d{4}', pag1)[0]
+    return (vencimento)
 
 def extrairPorte(pag1: str) -> str:
     '''
