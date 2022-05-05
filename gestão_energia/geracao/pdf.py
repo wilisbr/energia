@@ -37,7 +37,7 @@ c.drawCentredString(252,68,"Faturamento de Energia Elétrica Injetada")
 # This Block Consist of Costumer Details
 c.roundRect(15,85,525,60,10,stroke=1,fill=0)
 c.setFont("Times-Bold",10)
-c.drawRightString(100,100,"Mês da leitura :")
+c.drawRightString(100,100,"Mês da referencia :")
 c.drawRightString(154,100,"abril" + " / " + "2022")
 c.drawRightString(420,100,"Instalação :")
 c.drawRightString(475,100,"3004078633")

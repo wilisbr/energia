@@ -217,3 +217,13 @@ class TesteFaturamento(TestCase):
                          '11/04/2022')
         self.assertEqual(self.faturamentoRosi.vencimento, '11/02/2022')
 
+    def test_calculaEconomia(self):
+        self.assertEqual(self.faturamentoGoitacazesAbril.economia_percentual,
+                         0.17917323409377967)
+        self.assertEqual(self.faturamentoCharlesAbril.economia_percentual, 0.1306491476813323)
+        self.assertEqual(self.faturamentoRJAbril.economia_percentual,
+                         0.11602574487069707)
+        self.assertEqual(self.faturamentoEstovadaoAbril.economia_percentual,
+                         0.1038107323880337)
+        self.assertEqual(self.faturamentoRosi.economia_percentual, 0.07360372493047865)
+

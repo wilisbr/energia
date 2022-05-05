@@ -1,8 +1,9 @@
 from django.shortcuts import render
+from django.http import FileResponse, Http404
 from rest_framework.viewsets import ModelViewSet
 from django.contrib.auth.decorators import login_required
 from rest_framework import permissions
-#from rest_framework.parsers import MultiPartParser,FormParser
+from rest_framework.decorators import api_view
 
 from geracao.models import *
 from geracao.serializers import *
@@ -23,6 +24,19 @@ class FaturamentosViewSet (ModelViewSet):
         elif self.action == 'retrieve':
             self.permission_classes = [IsOwner]
         return super(self.__class__, self).get_permissions()
+
+@ api_view(['GET'])
+def getFaturaPdf(request):
+    faturamento = Faturamento.objects.filter(id__exact='1')[0]
+    faturamento.imprimir_pdf()
+    print (request.user)
+    try:    
+        filename = "invoice.pdf"
+        return FileResponse(open(filename, 'rb'), content_type='application/pdf')
+    except FileNotFoundError:
+        raise Http404()
+
+
 
 class IsSuperUser(permissions.BasePermission):
     def has_permission(self, request, view):
