@@ -1,5 +1,7 @@
 from reportlab.pdfgen import canvas
 from reportlab.lib import pagesizes
+from reportlab.lib.colors import Color, black, blue, red
+
 # Creating Canvas
 c = canvas.Canvas("invoice.pdf",pagesize=pagesizes.A4,bottomup=0)
 # Logo Section
@@ -46,10 +48,10 @@ c.drawRightString(100,126,"Cliente :")
 c.drawRightString(250,126,"Josué Figueiredo Silva") 
 c.drawRightString(100,139,"Endereço :")
 c.drawRightString(280,139,"RUA GOITACAZES 375 LJ 1")
-c.roundRect(15,150,260,250,10,stroke=1,fill=0)
-c.setFont("Courier-Bold",9.5)
-c.drawCentredString(150,160,"Simulação sem energia fotovoltaica")
-c.roundRect(280,150,260,250,10,stroke=1,fill=0)
+c.roundRect(15,150,260,220,10,stroke=1,fill=0)
+c.setFont("Courier-Bold",11)
+c.drawCentredString(150,160,"Simulação SEM energia fotovoltaica")
+c.roundRect(280,150,260,220,10,stroke=1,fill=0)
 c.setFont("Times-Bold",10)
 c.drawRightString(80,180,"Consumo:")
 c.drawRightString(130,180,"304" + " KWh")
@@ -59,10 +61,22 @@ c.drawRightString(240,195,"R$ "+"42,07")
 c.drawRightString(145,210,"Custo de disponibilidade:")
 c.drawRightString(240,210,"R$ "+"0")
 c.drawRightString(115,300,"Total da Conta:")
-c.drawRightString(240,300,"R$ "+"293,40")
+c.drawRightString(240,300,"R$ "+"393,40")
 
 
-c.drawCentredString(400,160,"Simulação COM energia fotovoltaica")
+c.setFont("Times-Bold",40)
+red50transparent = Color( 0, 0, 0, alpha=0.3)
+c.setFillColor(red50transparent)
+c.rotate(45)
+c.drawRightString(400,100,"Simulação")
+c.rotate(-45)
+red50transparent = Color( 0, 0, 0, alpha=1)
+c.setFillColor(red50transparent)
+
+
+c.setFont("Courier-Bold",11)
+c.drawCentredString(400,160,"Fatura COM energia fotovoltaica")
+c.setFont("Times-Bold",10)
 c.drawRightString(345,180,"Energia solar")
 c.drawRightString(393,180,"284" + " KWh")
 c.drawRightString(520,180,"R$ "+"341,33")
@@ -71,35 +85,15 @@ c.drawRightString(520,195,"R$ "+"42,07")
 c.drawRightString(396,210,"Custo de disponibilidade:")
 c.drawRightString(440,210,"20" + " KWh")
 c.drawRightString(520,210,"R$ "+"56,14")
+c.drawRightString(318,225,"Bônus:")
+c.drawRightString(520,225,"R$ "+"20,00")
+c.drawRightString(335,300,"Economia:")
+c.drawRightString(393,300,"13" + "%")
+c.drawRightString(520,300,"R$ "+ "50,09")
+c.drawRightString(350,320,"Total a pagar:")
+c.drawRightString(520,320,"R$ "+"333,31")
+c.roundRect(470, 305,60,20,3,stroke=1,fill=0)
 
-
-#c.drawRightString("RUA GOITACAZES 375 LJ 1")
-# This Block Consist of Item Description
-'''
-c.roundRect(15,108,170,75,10,stroke=1,fill=0)
-c.roundRect(15,188,170,75,10,stroke=1,fill=0)
-c.roundRect(15,108,170,130,10,stroke=1,fill=0)
-c.line(15,120,185,120)
-c.drawCentredString(25,118,"SR No.")
-c.drawCentredString(75,118,"GOODS DESCRIPTION")
-c.drawCentredString(125,118,"RATE")
-c.drawCentredString(148,118,"QTY")
-c.drawCentredString(173,118,"TOTAL")
-# Drawing table for Item Description
-c.line(15,210,185,210)
-c.line(35,108,35,220)
-c.line(115,108,115,220)
-c.line(135,108,135,220)
-c.line(160,108,160,220)
-# Declaration and Signature
-c.line(15,220,185,220)
-c.line(100,220,100,238)
-c.drawString(20,225,"We declare that above mentioned")
-c.drawString(20,230,"information is true.")
-c.drawString(20,235,"(This is system generated invoive)")
-c.drawRightString(180,235,"Authorised Signatory")
-# End the Page and Start with new
-'''
 c.showPage()
 # Saving the PDF
 c.save()
