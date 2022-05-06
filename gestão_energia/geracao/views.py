@@ -27,7 +27,7 @@ class FaturamentosViewSet (ModelViewSet):
 
 @ api_view(['GET'])
 def getFaturaPdf(request):
-    faturamento = Faturamento.objects.filter(id__exact='1')[0]
+    faturamento = Faturamento.objects.filter(id__exact='4')[0]
     faturamento.imprimir_pdf()
     print (request.user)
     try:    

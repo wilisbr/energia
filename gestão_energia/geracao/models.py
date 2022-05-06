@@ -118,6 +118,9 @@ class Faturamento(models.Model):
     custo_disponibilidade = models.FloatField(
                                                 null=True,
                                                 blank=True)
+    custo_disponibilidade_simulado = models.FloatField(
+                                                null=True,
+                                                blank=True)
     consumo_mes = models.FloatField(
                                       null=True,
                                       blank=True)
@@ -127,7 +130,7 @@ class Faturamento(models.Model):
     economia_percentual=models.FloatField(
                                       null=True,
                                       blank=True)
-    endereco = models.CharField (max_length=100, null=True, blank=True)
+    endereco = models.CharField (max_length=100, null=False, blank=True)
     energia_da_concessionaria = models.FloatField(
                                                     null=True,
                                                     blank=True)
@@ -142,7 +145,7 @@ class Faturamento(models.Model):
                                    blank=True)
     instalacao = models.IntegerField (null=True, blank=True)
     porte = models.CharField(max_length=15, null=True, blank=True)
-    referencia = models.CharField (max_length=7, null=True, blank=True)
+    referencia = models.CharField (max_length=8, null=True, blank=True)
     tarifa = models.FloatField(
                                  null=True,
                                  blank=True)
@@ -253,6 +256,7 @@ class Faturamento(models.Model):
         self.injetada = extrairEnergiaInjetada(conta_txt)
         self.instalacao = extrairNumeroInstalacao(conta_txt)
         self.custo_disponibilidade = extrairCustoDisponibilidade(conta_txt)[0]
+        self.custo_disponibilidade_simulado = extrairCustoDisponibilidade(conta_txt)[0]
         self.energia_da_concessionaria = extrairCustoDisponibilidade(
             conta_txt)[1]
         self.referencia= extrairReferencia(conta_txt)
@@ -321,14 +325,24 @@ class Faturamento(models.Model):
 
         '''
 
-        self.valorConsumoSimulado = float(self.consumo_mes) * self.tarifa
+        
+        if self.consumo_mes < franquiaOficial[
+                self.
+                porte]:
+            self.valorConsumoSimulado = 0
+        else:
+            self.valorConsumoSimulado = float(self.consumo_mes) * self.tarifa
+            self.custo_disponibilidade_simulado=0
+ 
+
+        '''
         self.valorConsumoSimulado = franquiaOficial[
             self.porte] if self.valorConsumoSimulado < franquiaOficial[
                 self.
                 porte] else self.valorConsumoSimulado  #Caso o consumo seja menor que a franquia, colocar a franquia como consumo simulado
-
-        self.totalSimulado = self.valorConsumoSimulado + self.iluminacaoPublica
-
+        '''
+        self.totalSimulado = self.valorConsumoSimulado + self.custo_disponibilidade_simulado+ self.iluminacaoPublica
+        
     def calculaEconomia(self, *args, **kwargs):
         '''
         Calcula propriedades relacionadas com a economia que o cliente teve ao contratar
@@ -347,7 +361,7 @@ class Faturamento(models.Model):
         '''
 
         self.economia_valor=self.totalSimulado-self.totalPagar
-        self.economia_percentual=self.economia_valor/self.totalSimulado
+        self.economia_percentual=100*self.economia_valor/self.totalSimulado
 
     def imprimir_pdf(self):
         print (self.conta_pdf)
@@ -387,31 +401,31 @@ class Faturamento(models.Model):
         c.roundRect(15,85,525,60,10,stroke=1,fill=0)
         c.setFont("Times-Bold",10)
         c.drawRightString(100,100,"Mês da referencia :")
-        c.drawRightString(154,100,"abril" + " / " + "2022")
+        c.drawRightString(154,100,self.referencia)
         c.drawRightString(420,100,"Instalação :")
-        c.drawRightString(475,100,"3004078633")
+        c.drawRightString(475,100,str(self.instalacao))
         c.drawRightString(100,113,"Vencimento :")
-        c.drawRightString(150,113,"11/05/2022")
+        c.drawRightString(150,113,self.vencimento)
         c.drawRightString(100,126,"Cliente :")
-        c.drawRightString(250,126,"Josué Figueiredo Silva") 
+        c.drawRightString(250,126,"Estovadão") 
         c.drawRightString(100,139,"Endereço :")
-        c.drawRightString(280,139,"RUA GOITACAZES 375 LJ 1")
-        c.drawRightString(480,139,"Desconto negociado no kwh: "+ "20" + "%")
+        c.drawRightString(280,139,self.endereco)
+        c.drawRightString(480,139,"Desconto negociado no kwh: "+ str(self.desconto) + "%")
         c.roundRect(15,150,260,220,10,stroke=1,fill=0)
         c.setFont("Courier-Bold",11)
         c.drawCentredString(150,160,"Simulação SEM energia fotovoltaica")
         c.roundRect(280,150,260,220,10,stroke=1,fill=0)
         c.setFont("Times-Bold",10)
         c.drawRightString(80,180,"Consumo:")
-        c.drawRightString(130,180,"304" + " KWh")
-        c.drawRightString(190,180,"x "+"R$ "+"1,123")
-        c.drawRightString(250,180,"R$ "+"341,33")
+        c.drawRightString(130,180, "{:.0f} KWh".format(self.consumo_mes))
+        c.drawRightString(190,180,"x "+"R$ {:.2f}".format(self.tarifa))
+        c.drawRightString(250,180,"R$ {:.2f}".format(self.valorConsumoSimulado))
         c.drawRightString(123,195,"Iluminação Pública:")
-        c.drawRightString(250,195,"R$ "+"42,07")
+        c.drawRightString(250,195,"R$ "+str(self.iluminacaoPublica))
         c.drawRightString(145,210,"Custo de disponibilidade:")
-        c.drawRightString(250,210,"R$ "+"0")
+        c.drawRightString(250,210,"R$ "+str(self.custo_disponibilidade_simulado))
         c.drawRightString(115,300,"Total da Conta:")
-        c.drawRightString(250,300,"R$ "+"393,40")
+        c.drawRightString(250,300,"R$ {:.2f}".format(self.totalSimulado))
 
 
         c.setFont("Times-Bold",40)
@@ -428,21 +442,21 @@ class Faturamento(models.Model):
         c.drawCentredString(400,160,"Fatura COM energia fotovoltaica")
         c.setFont("Times-Bold",10)
         c.drawRightString(345,180,"Energia solar")
-        c.drawRightString(393,180,"284" + " KWh")
-        c.drawRightString(450,180,"x "+"R$ "+"0,898")
-        c.drawRightString(520,180,"R$ "+"341,33")
+        c.drawRightString(399,180,str(self.injetada) + " KWh")
+        c.drawRightString(454,180,"x "+"R$ "+"{:.2f}".format(self.tarifaInjetada))
+        c.drawRightString(520,180,"R$ "+"{:.2f}".format(self.valorInjetado))
         c.drawRightString(374,195,"Iluminação Pública:")
-        c.drawRightString(520,195,"R$ "+"42,07")
+        c.drawRightString(520,195,"R$ "+str(self.iluminacaoPublica))
         c.drawRightString(396,210,"Custo de disponibilidade:")
-        c.drawRightString(440,210,"20" + " KWh")
-        c.drawRightString(520,210,"R$ "+"56,14")
+        c.drawRightString(440,210,"{:.0f}".format(self.consumo_mes-self.injetada) + " KWh")
+        c.drawRightString(520,210,"R$ "+"{:.2f}".format(self.custo_disponibilidade))
         c.drawRightString(318,225,"Bônus:")
-        c.drawRightString(520,225,"-R$ "+"20,00")
+        c.drawRightString(520,225,"-R$ {:.2f}".format(self.bonus))
         c.drawRightString(335,300,"Economia:")
-        c.drawRightString(393,300,"13" + "%")
-        c.drawRightString(520,300,"R$ "+ "50,09")
+        c.drawRightString(393,300,"{:.2f}".format(self.economia_percentual) + "%")
+        c.drawRightString(520,300,"R$ {:.2f}".format(self.economia_valor))
         c.drawRightString(350,320,"Total a pagar:")
-        c.drawRightString(520,320,"R$ "+"333,31")
+        c.drawRightString(520,320,"R$ {:.2f}".format(self.totalPagar))
         c.roundRect(470, 305,60,20,3,stroke=1,fill=0)
 
         c.showPage()
@@ -492,5 +506,8 @@ class Faturamento(models.Model):
             extrairEnergiaInjetada=cemig.extrairEnergiaInjetada,
             extrairCustoDisponibilidade=cemig.extrairCustoDisponibilidade,
             obterIluminacaoPublica=cemig.obterIluminacaoPublica,
-            extrairNumeroInstalacao=cemig.extrairNumeroInstalacao)
+            extrairNumeroInstalacao=cemig.extrairNumeroInstalacao,
+            extrairReferencia=cemig.extrairReferencia,
+            extrairVencimento=cemig.extrairVencimento
+            )
         super().save(*args, **kwargs)
