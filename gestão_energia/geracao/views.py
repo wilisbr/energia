@@ -4,9 +4,11 @@ from rest_framework.viewsets import ModelViewSet
 from django.contrib.auth.decorators import login_required
 from rest_framework import permissions
 from rest_framework.decorators import api_view
+from rest_framework.response import Response
 
 from geracao.models import *
 from geracao.serializers import *
+import cemig
 
 # Create your views here.
 class FaturamentosViewSet (ModelViewSet):
@@ -26,9 +28,12 @@ class FaturamentosViewSet (ModelViewSet):
         return super(self.__class__, self).get_permissions()
 
 
-@ api_view(['GET'])
+@ api_view(['POST'])
 def getFaturaPdf(request):
-    faturamento = Faturamento.objects.filter(id__exact='4')[0]
+    id=request.data['id']
+    if id==None:
+        id=1
+    faturamento = Faturamento.objects.filter(id__exact=id)[0]
     faturamento.imprimir_pdf()
     print (request.user)
     try:    
@@ -37,7 +42,36 @@ def getFaturaPdf(request):
     except FileNotFoundError:
         raise Http404()
 
+@ api_view(['GET'])
+def getFaturaPdf2(request):
+    id=request.query_params.get('id')
+    faturamento = Faturamento.objects.filter(id__exact=id)[0]
+    faturamento.imprimir_pdf()
+    print (request.user)
+    try:    
+        filename = "invoice.pdf"
+        return FileResponse(open(filename, 'rb'), content_type='application/pdf')
+    except FileNotFoundError:
+        raise Http404()
 
+@ api_view(['POST'])
+def carregarConta(request):
+    id=request.data['id']
+    print (id)
+    faturamento = Faturamento.objects.filter(id__exact=id)[0]
+    faturamento.carregarConta(pdf2txt=cemig.pdf2txt,
+            extrairPorte=cemig.extrairPorte,
+            extrairHistoricoConsumo=cemig.extrairHistoricoConsumo,
+            extrairEnergiaInjetada=cemig.extrairEnergiaInjetada,
+            extrairCustoDisponibilidade=cemig.extrairCustoDisponibilidade,
+            obterIluminacaoPublica=cemig.obterIluminacaoPublica,
+            extrairNumeroInstalacao=cemig.extrairNumeroInstalacao,
+            extrairReferencia=cemig.extrairReferencia,
+            extrairVencimento=cemig.extrairVencimento)
+    faturamento.save()
+    print (faturamento.totalPagar)
+    serializer =  FaturamentoSerializer(faturamento, many=False)
+    return Response(serializer.data)
 
 class IsSuperUser(permissions.BasePermission):
     def has_permission(self, request, view):
