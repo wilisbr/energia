@@ -6,6 +6,8 @@ import os, sys, inspect
 from reportlab.pdfgen import canvas
 from reportlab.lib import pagesizes
 from reportlab.lib.colors import Color
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 currentdir = os.path.dirname(
     os.path.abspath(inspect.getfile(inspect.currentframe())))
@@ -495,10 +497,10 @@ class Faturamento(models.Model):
         self.save()
     
     def save(self, *args, **kwargs):
-        print ('Salvando e alterando o objeto Faturamento')
+        print ('Salvando e alterando o objeto Faturamento no save()')
         super().save(*args, **kwargs) #Tem que salvar antes, para gravar o arquivo pdf que foi modificado
-        print(self.conta_pdf)
-        #self.conta_pdf='geracao/tests/noname.pdf'
+        print ('salvei e saí do save()')
+        '''print(self.conta_pdf)
         self.carregarConta(      
             pdf2txt=cemig.pdf2txt,
             extrairPorte=cemig.extrairPorte,
@@ -510,4 +512,7 @@ class Faturamento(models.Model):
             extrairReferencia=cemig.extrairReferencia,
             extrairVencimento=cemig.extrairVencimento
             )
-        super().save(*args, **kwargs)
+        
+        super().save(*args, **kwargs, force_update=True )
+        '''
+

@@ -25,6 +25,7 @@ class FaturamentosViewSet (ModelViewSet):
             self.permission_classes = [IsOwner]
         return super(self.__class__, self).get_permissions()
 
+
 @ api_view(['GET'])
 def getFaturaPdf(request):
     faturamento = Faturamento.objects.filter(id__exact='4')[0]
