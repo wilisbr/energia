@@ -29,6 +29,5 @@ urlpatterns = [
     path('api/v1/', include('djoser.urls.jwt')),
     path('api/v1/', include(router.urls)),
     path('api/v1/getFaturaPdf', views.getFaturaPdf,name='GetFaturaPdf'),
-    path('api/v1/getFaturaPdf2', views.getFaturaPdf2,name='GetFaturaPdf2'),
     path('api/v1/carregarConta', views.carregarConta, name='carregarConta')
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

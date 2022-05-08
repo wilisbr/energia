@@ -28,22 +28,8 @@ class FaturamentosViewSet (ModelViewSet):
         return super(self.__class__, self).get_permissions()
 
 
-@ api_view(['POST'])
-def getFaturaPdf(request):
-    id=request.data['id']
-    if id==None:
-        id=1
-    faturamento = Faturamento.objects.filter(id__exact=id)[0]
-    faturamento.imprimir_pdf()
-    print (request.user)
-    try:    
-        filename = "invoice.pdf"
-        return FileResponse(open(filename, 'rb'), content_type='application/pdf')
-    except FileNotFoundError:
-        raise Http404()
-
 @ api_view(['GET'])
-def getFaturaPdf2(request):
+def getFaturaPdf(request):
     id=request.query_params.get('id')
     faturamento = Faturamento.objects.filter(id__exact=id)[0]
     faturamento.imprimir_pdf()

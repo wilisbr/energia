@@ -19,6 +19,7 @@
             <button type="submit">Gravar</button>
             ou <router-link to="/faturas">Sair</router-link>
         </form>
+        <iframe :src="`http://localhost:8000/api/v1/getFaturaPdf?id=${id}`" width="100%" height="500px"></iframe>
     </div>
 </template>
 
@@ -26,24 +27,28 @@
 /* eslint-disable */
 import axios from 'axios'
 import {toast} from 'bulma-toast'
- 
+import download from 'downloadjs'
+
+
+
 export default {
   name: 'Fatura',
   data() {
     return{
       id:this.$route.params.id,
       fatura: Object,
-      conta_pdf: Object
+      conta_pdf: Object,
     }
   },
   components: {
-
+      
   },
   props: {
 
   },
   mounted(){
     this.getFatura()
+    //this.downloadFatura()
   },
   methods:{
     async getFatura(){
@@ -67,7 +72,7 @@ export default {
     },
     upload_fatura: async function (e){
       let formData = new FormData();
-      if (this.fatura.conta_pdf){
+      if (this.conta_pdf){
         console.log ('achei um anexo')
         console.log (this.conta_pdf)
         formData.append('conta_pdf', this.conta_pdf);
@@ -81,6 +86,7 @@ export default {
               console.log('Deu certo!')
               console.log (response)
               this.fatura=response.data
+              this.carregarConta()
           })
           .catch(error => {
               if (error.response) {
@@ -94,6 +100,27 @@ export default {
               }
           })
       },
+    carregarConta: async function (e){
+        let formData = new FormData();
+        formData.append('id', this.fatura.id);
+        await axios
+          .post (`/api/v1/carregarConta`, formData)
+          .then (response => {
+              console.log('Deu certo!')
+              console.log (response)
+              this.fatura=response.data
+          })
+          .catch(error => {
+              if (error.response) {
+                  for (const property in error.response.data) {
+                      this.errors.push(`${property}: ${error.response.data[property]}`)
+                  }
+              } else {
+                  this.errors.push('Something went wrong. Please try again')
+                  console.log(JSON.stringify(error))
+              }
+          })
+    }, 
     gravar: async function (e){
       console.log (axios.defaults.headers)
       console.log (this.fatura)
@@ -137,8 +164,8 @@ export default {
                         console.log(JSON.stringify(error))
                     }
                 })
-      }
-  
+      },
+
   },
   
 
