@@ -1,21 +1,29 @@
 <template>
     <div class="page-cart">
-        <form @submit.prevent="upload_fatura">
-            <a :href="fatura.conta_pdf" target="_blank">Ver Fatura Atual </a>
+        
+        <a :href="fatura.conta_pdf" target="_blank">Clique para ver fatura da concessionária</a>
+        <br>
+        <span> Substituir fatura da concessionária:   </span>
+        <input type="file"
+            id="upload_fatura" name="upload_fatura"
+            accept=".pdf" @change="onFileChange">
+        <br>
 
-            <input type="file"
-              id="avatar" name="avatar"
-              accept=".pdf" @change="onFileChange">
-            <button type="submit">Substituir Fatura</button>
-        </form>
         <form @submit.prevent="gravar">
-            <label>Percentual de desconto:</label>
-            <input type="number" min="0" max="100" step="1" v-model="fatura.desconto" />
-            <br><br>
-            <label>Bônus (R$):</label>
-            <input type="number" name="bonus" v-model="fatura.bonus"> <br><br>
-            <button type="submit">Gravar</button>
-            ou <router-link to="/faturas">Sair</router-link>
+        <table className="padding-table-columns">
+        <tr>
+            <td><label>Percentual de desconto sob o KWh:</label>
+            <input type="number" min="0" max="100" step="1" v-model="fatura.desconto" /> %</td>
+            <td>
+                <label>Bônus adicional (R$):</label>
+                <input type="number" name="bonus" v-model="fatura.bonus"> <br><br>
+            </td>
+            <td>
+                <button type="submit">Gravar</button>
+                ou <router-link to="/faturas">Voltar</router-link>
+            </td>
+        </tr>
+        </table>
         </form>
         <iframe :key="id_iFrameCobrancaPDF" :src="`http://localhost:8000/api/v1/getFaturaPdf?id=${id}`" width="100%" height="700px"></iframe>
     </div>
@@ -68,7 +76,6 @@ export default {
       if (!files.length) return;
       //this.fatura.conta_pdf = files[0]
       this.conta_pdf = files[0]
-      console.log (files[0])
       this.upload_fatura()
     },
     upload_fatura: async function (e){
@@ -77,7 +84,6 @@ export default {
         console.log ('achei um anexo')
         console.log (this.conta_pdf)
         formData.append('conta_pdf', this.conta_pdf);
-        //formData.append('bonus', 30)
       }
       axios.defaults.headers.put['Content-Type']='application/json' 
       console.log (axios.defaults.headers)
@@ -87,8 +93,6 @@ export default {
               console.log('Deu certo!')
               console.log (response)
               this.fatura=response.data
-              this.carregarConta()
-              this.id_iFrameCobrancaPDF=this.id_iFrameCobrancaPDF+1
           })
           .catch(error => {
               if (error.response) {
@@ -101,6 +105,8 @@ export default {
                   console.log(JSON.stringify(error))
               }
           })
+        this.carregarConta()
+        this.id_iFrameCobrancaPDF=this.id_iFrameCobrancaPDF+1
       },
     carregarConta: async function (e){
         let formData = new FormData();
@@ -108,8 +114,6 @@ export default {
         await axios
           .post (`/api/v1/carregarConta`, formData)
           .then (response => {
-              console.log('Deu certo!')
-              console.log (response)
               this.fatura=response.data
           })
           .catch(error => {
@@ -151,3 +155,10 @@ export default {
 
 }
 </script>
+
+<style scoped>
+.padding-table-columns td
+{
+    padding:0 25px 0 0; /* Only right padding*/
+}
+</style>
