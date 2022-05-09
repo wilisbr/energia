@@ -1,7 +1,5 @@
 <template>
     <div class="page-cart">
-        Aqui vai aparecer a faturamento
-        {{fatura}}
         <form @submit.prevent="upload_fatura">
             <a :href="fatura.conta_pdf" target="_blank">Ver Fatura Atual </a>
 
@@ -10,7 +8,7 @@
               accept=".pdf" @change="onFileChange">
             <button type="submit">Substituir Fatura</button>
         </form>
-        <form @submit.prevent="gravar_old">
+        <form @submit.prevent="gravar">
             <label>Percentual de desconto:</label>
             <input type="number" min="0" max="100" step="1" v-model="fatura.desconto" />
             <br><br>
@@ -19,7 +17,7 @@
             <button type="submit">Gravar</button>
             ou <router-link to="/faturas">Sair</router-link>
         </form>
-        <iframe :src="`http://localhost:8000/api/v1/getFaturaPdf?id=${id}`" width="100%" height="500px"></iframe>
+        <iframe :key="id_iFrameCobrancaPDF" :src="`http://localhost:8000/api/v1/getFaturaPdf?id=${id}`" width="100%" height="700px"></iframe>
     </div>
 </template>
 
@@ -38,6 +36,7 @@ export default {
       id:this.$route.params.id,
       fatura: Object,
       conta_pdf: Object,
+      id_iFrameCobrancaPDF: Number
     }
   },
   components: {
@@ -47,6 +46,7 @@ export default {
 
   },
   mounted(){
+    this.id_iFrameCobrancaPDF=0
     this.getFatura()
     //this.downloadFatura()
   },
@@ -69,6 +69,7 @@ export default {
       //this.fatura.conta_pdf = files[0]
       this.conta_pdf = files[0]
       console.log (files[0])
+      this.upload_fatura()
     },
     upload_fatura: async function (e){
       let formData = new FormData();
@@ -87,6 +88,7 @@ export default {
               console.log (response)
               this.fatura=response.data
               this.carregarConta()
+              this.id_iFrameCobrancaPDF=this.id_iFrameCobrancaPDF+1
           })
           .catch(error => {
               if (error.response) {
@@ -121,30 +123,7 @@ export default {
               }
           })
     }, 
-    gravar: async function (e){
-      console.log (axios.defaults.headers)
-      console.log (this.fatura)
-      axios.defaults.headers.put['Content-Type']='application/x-www-form-urlencoded' 
-      await axios
-          .put (`/api/v1/faturamentos/${this.id}/`, this.fatura)
-          .then (response => {
-              console.log('Deu certo!')
-              console.log (response)
-              const access=response.data.access
-          })
-          .catch(error => {
-              if (error.response) {
-                  for (const property in error.response.data) {
-                      this.errors.push(`${property}: ${error.response.data[property]}`)
-                  }
-              } else {
-                  this.errors.push('Something went wrong. Please try again')
-                  
-                  console.log(JSON.stringify(error))
-              }
-          })
-      },
-      gravar_old: async function (e){
+      gravar: async function (e){
             delete this.fatura.conta_pdf
             await axios
                 .put (`/api/v1/faturamentos/${this.id}/`, this.fatura)
@@ -152,6 +131,7 @@ export default {
                     console.log('Deu certo!')
                     console.log (response)
                     this.fatura=response.data
+                    this.id_iFrameCobrancaPDF=this.id_iFrameCobrancaPDF+1
                 })
                 .catch(error => {
                     if (error.response) {
