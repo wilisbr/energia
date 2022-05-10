@@ -155,3 +155,4 @@ EMAIL_HOST_USER = 'charles.wilis@aol.com'
 EMAIL_HOST_PASSWORD = 'oydvlhyifbqadkgv'
 DEFAULT_FROM_EMAIL = 'charles.wilis@aol.com'
 EMAIL_PORT = 587
+#http://127.0.0.1:8000/accounts/password_reset/
