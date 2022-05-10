@@ -29,5 +29,6 @@ urlpatterns = [
     path('api/v1/', include('djoser.urls.jwt')),
     path('api/v1/', include(router.urls)),
     path('api/v1/getFaturaPdf', views.getFaturaPdf,name='GetFaturaPdf'),
-    path('api/v1/carregarConta', views.carregarConta, name='carregarConta')
+    path('api/v1/carregarConta', views.carregarConta, name='carregarConta'),
+    path('accounts/', include('django.contrib.auth.urls'))
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

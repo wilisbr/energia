@@ -144,3 +144,14 @@ SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=1440),
     'REFRESH_TOKEN_LIFETIME': timedelta(minutes=3600),
 }
+
+#EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
+#EMAIL_FILE_PATH = BASE_DIR / "sent_emails"
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.aol.com'
+EMAIL_HOST_USER = 'charles.wilis@aol.com'
+EMAIL_HOST_PASSWORD = 'oydvlhyifbqadkgv'
+DEFAULT_FROM_EMAIL = 'charles.wilis@aol.com'
+EMAIL_PORT = 587
