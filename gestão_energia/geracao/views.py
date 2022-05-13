@@ -26,7 +26,27 @@ class FaturamentosViewSet (ModelViewSet):
         elif self.action == 'retrieve':
             self.permission_classes = [IsOwner]
         return super(self.__class__, self).get_permissions()
+    def perform_create(self, serializer):
+        # Save with the new value for the target model fields
+        serializer.save(usuario = self.request.user)
 
+class ClientesViewSet (ModelViewSet):
+    queryset = Cliente.objects.all()
+    serializer_class = ClienteSerializer
+    def get_queryset(self):
+        user = self.request.user
+        print (user)
+        #return Cliente.objects.all()
+        return Cliente.objects.filter(usuario__exact=str(self.request.user))
+    def get_permissions(self):
+        if self.action == 'list':
+            self.permission_classes = [IsSuperUser, ]
+        elif self.action == 'retrieve':
+            self.permission_classes = [IsOwner]
+        return super(self.__class__, self).get_permissions()
+    def perform_create(self, serializer):
+        # Save with the new value for the target model fields
+        serializer.save(usuario = self.request.user)
 
 @ api_view(['GET'])
 def getFaturaPdf(request):

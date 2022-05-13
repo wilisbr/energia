@@ -1,5 +1,6 @@
 from django.db import models
 import PyPDF2
+from django.forms import EmailField
 import numpy as np
 import math
 import os, sys, inspect
@@ -25,11 +26,20 @@ class Cliente(models.Model):
     
     Attributes
     ----------
-    cpf: int
+    cpf_cliente: int
         CPF do cliente.
+    nome: string
+        Nome do cliente
+    telefone: string
+        Telefone do cliente
+    usuario : str 
+        Nome do usuario da plataforma que cadastrou o cliente
     
     """
     cpf_cliente = models.IntegerField()
+    usuario= models.CharField(max_length=40, null=True, blank=True)
+    nome = models.TextField(null=False, blank=False)
+    telefone = models.TextField(null=True, blank=True)
 
     def gravar(self):
         self.save()

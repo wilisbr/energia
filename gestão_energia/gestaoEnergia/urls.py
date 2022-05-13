@@ -22,6 +22,7 @@ from django.conf.urls.static import static
 
 router=routers.DefaultRouter()
 router.register('faturamentos', views.FaturamentosViewSet)
+router.register('clientes', views.ClientesViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),

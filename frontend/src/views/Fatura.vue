@@ -60,13 +60,11 @@ export default {
   },
   methods:{
     async getFatura(){
-      await axios
-        .get ("/api/v1/faturamentos/"+this.id)
+        await axios
+        .get ("/api/v1/faturamentos/"+this.id+"/")
         .then(response => {this.fatura=response.data
         console.log(response)
-        
         })
-        
         .catch(error => {
             console.log(error)
           })    

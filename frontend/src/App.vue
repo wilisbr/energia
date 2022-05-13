@@ -22,8 +22,9 @@
           <div class="navbar-item">
             <div class="buttons">
               <template v-if="$store.state.access!=''">
-                <router-link to="/faturas" class="button is-light">Faturas</router-link>
-                <router-link to="/my-account" class="button is-light">Meu Perfil</router-link>
+                <router-link to="/clientes" class="navbar-item">Clientes</router-link>
+                <router-link to="/faturas" class="navbar-item">Faturas</router-link>
+                <router-link to="/my-account" class="navbar-item">Meu Perfil</router-link>
               </template>
               <template v-else>
                 <router-link to="/log-in" class="button is-light">Log in</router-link>

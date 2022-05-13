@@ -10,4 +10,8 @@ class FaturamentoSerializer (serializers.ModelSerializer):
         validated_data['endereco']=Faturamento.objects.filter(cpf_cliente=validated_data['cpf_cliente']).latest('id').endereco
         novo_faturamento=Faturamento.objects.create(**validated_data)
         return(novo_faturamento)
-    
+
+class ClienteSerializer (serializers.ModelSerializer):
+    class Meta:
+        model = Cliente
+        fields = '__all__'

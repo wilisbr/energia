@@ -5,6 +5,7 @@ import LogIn from '../views/LogIn.vue'
 import MyAccount from '../views/MyAccount.vue'
 import Faturas from '../views/Faturas.vue'
 import Fatura from '../views/Fatura.vue'
+import Clientes from '../views/Clientes.vue'
 import store from '../store'
 
 const routes = [
@@ -32,6 +33,14 @@ const routes = [
     path: '/my-account',
     name: 'MyAccount',
     component: MyAccount,
+    meta: {
+        requireLogin: true
+    }
+  },
+  {
+    path: '/clientes',
+    name: 'Clientes',
+    component: Clientes,
     meta: {
         requireLogin: true
     }
