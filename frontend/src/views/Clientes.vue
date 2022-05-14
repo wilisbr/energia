@@ -67,6 +67,20 @@ export default {
     this.getClientes()
   },
   methods:{
+    logout() {
+          toast ({
+          message: 'Ticket expirado. Faça novo login',
+          type:'is-success',
+          dismissible: true,
+          pauseOnHover: true,
+          duration: 2000,
+          position: 'bottom-right'
+          })
+            axios.defaults.headers.common["Authorization"] = ""
+            localStorage.removeItem("access")
+            this.$store.commit('removeToken')
+            this.$router.push('/log-in')
+    },
     async gravar(cliente){
       this.$store.commit('setIsLoading', true)
       console.log(cliente)
@@ -77,16 +91,13 @@ export default {
         })
         
         .catch(error => {
+            if (error.response.status === 401) {
+                console.log('Ticket expirado. Necessário novo login')
+                this.logout()
+            }
             console.log(error)
           })    
-      toast ({
-          message: 'Teste',
-          type:'is-success',
-          dismissible: true,
-          pauseOnHover: true,
-          duration: 2000,
-          position: 'bottom-right'
-        })
+      
       this.$store.commit('setIsLoading', false)
     },
     async novo(cliente){
@@ -99,16 +110,12 @@ export default {
         })
         
         .catch(error => {
+            if (error.response.status === 401) {
+                console.log('Ticket expirado. Necessário novo login')
+                this.logout()
+            }
             console.log(error)
           })    
-      toast ({
-          message: 'Teste',
-          type:'is-success',
-          dismissible: true,
-          pauseOnHover: true,
-          duration: 2000,
-          position: 'bottom-right'
-        })
       this.$store.commit('setIsLoading', false)
     },
     async getClientes(){
@@ -121,16 +128,12 @@ export default {
         })
         
         .catch(error => {
+            if (error.response.status === 401) {
+                console.log('Ticket expirado. Necessário novo login')
+                this.logout()
+            }
             console.log(error)
           })    
-      toast ({
-          message: 'Teste',
-          type:'is-success',
-          dismissible: true,
-          pauseOnHover: true,
-          duration: 2000,
-          position: 'bottom-right'
-        })
       this.$store.commit('setIsLoading', false)
     },
   }

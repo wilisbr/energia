@@ -6,8 +6,13 @@
       </div>
       <div class="column is-12 box">
         <form @submit.prevent="nova_fatura">
-          <label>CPF</label>
-          <input type="number" name="cliente" v-model="fatura.id_cliente"> <br><br>
+          <label>Cliente</label>
+          <select v-model="fatura.id_cliente">
+            <option v-for="cliente in clientes" v-bind:value="cliente.id" v-bind:key="cliente.id"> 
+              {{ cliente.nome }}
+            </option>
+          </select>
+          <br><br>
           <input type="file"
             id="nova_fatura" name="nova_fatura"
             accept=".pdf" @change="onFileChange">
@@ -50,6 +55,7 @@ export default {
   data() {
     return {
       faturas : [],
+      clientes: [],
       fatura: {cpf_cliente: 1},
       conta_pdf: Object,
     }
@@ -58,9 +64,42 @@ export default {
 
   },
   mounted(){
+    this.$store.commit('setIsLoading', true)
     this.getFaturamentos()
+    this.getClientes()
+    this.$store.commit('setIsLoading', false)
   },
   methods:{
+    logout() {
+      toast ({
+      message: 'Ticket expirado. Faça novo login',
+      type:'is-success',
+      dismissible: true,
+      pauseOnHover: true,
+      duration: 2000,
+      position: 'bottom-right'
+      })
+      axios.defaults.headers.common["Authorization"] = ""
+      localStorage.removeItem("access")
+      this.$store.commit('removeToken')
+      this.$router.push('/log-in')
+    },
+    async getClientes(){
+      await new Promise(r => setTimeout(r, 1000));
+      await axios
+        .get ("/api/v1/clientes/")
+        .then(response => {this.clientes=response.data
+        console.log(response)
+        })
+        
+        .catch(error => {
+            if (error.response.status === 401) {
+                console.log('Ticket expirado. Necessário novo login')
+                this.logout()
+            }
+            console.log(error)
+          })    
+    },
     onFileChange(e) {
       var files = e.target.files || e.dataTransfer.files;
       if (!files.length) return;
@@ -71,17 +110,12 @@ export default {
     upload_fatura: async function (e){
       let formData = new FormData();
       if (this.conta_pdf){
-        console.log ('achei um anexo')
-        console.log (this.conta_pdf)
         formData.append('conta_pdf', this.conta_pdf);
       }
       axios.defaults.headers.put['Content-Type']='application/json' 
-      console.log (axios.defaults.headers)
       await axios
           .put (`/api/v1/faturamentos/${this.fatura.id}/`, formData)
           .then (response => {
-              console.log('Deu certo!')
-              console.log (response)
               this.fatura=response.data
           })
           .catch(error => {
@@ -91,7 +125,6 @@ export default {
                   }
               } else {
                   this.errors.push('Something went wrong. Please try again')
-                  
                   console.log(JSON.stringify(error))
               }
           })
@@ -125,6 +158,10 @@ export default {
           this.fatura=response.data
         })
         .catch(error => {
+            if (error.response.status === 401) {
+                console.log('Ticket expirado. Necessário novo login')
+                this.logout()
+            }
             console.log(error)
           })
       this.upload_fatura()
@@ -139,32 +176,30 @@ export default {
           this.getFaturamentos()
         })
         .catch(error => {
-            console.log(error)
+          if (error.response.status === 401) {
+                console.log('Ticket expirado. Necessário novo login')
+                this.logout()
+          }
+          console.log(error)
           })  
       this.$store.commit('setIsLoading', false)
     },
 
     async getFaturamentos(){
-      this.$store.commit('setIsLoading', true)
-      await new Promise(r => setTimeout(r, 1000));
+      //await new Promise(r => setTimeout(r, 1000));
       await axios
         .get ("/api/v1/faturamentos/")
         .then(response => {this.faturas=response.data
         console.log(response)
         
         })
-        
-        .catch(error => {
+        .catch(error => {  
+            if (error.response.status === 401) {
+                console.log('Ticket expirado. Necessário novo login')
+                this.logout()
+            }
             console.log(error)
           })    
-      toast ({
-          message: 'Teste',
-          type:'is-success',
-          dismissible: true,
-          pauseOnHover: true,
-          duration: 2000,
-          position: 'bottom-right'
-        })
 
       // Vamos baixar o nome dos clientes:
       for(let i = 0; i < this.faturas.length; i = i + 1 ) {
@@ -178,7 +213,6 @@ export default {
             console.log(error)
           })    
       }
-      this.$store.commit('setIsLoading', false)
     },
   }
 
