@@ -7,7 +7,7 @@
       <div class="column is-12 box">
         <form @submit.prevent="nova_fatura">
           <label>Cliente</label>
-          <select v-model="fatura.id_cliente">
+          <select v-model="id_cliente">
             <option v-for="cliente in clientes" v-bind:value="cliente.id" v-bind:key="cliente.id"> 
               {{ cliente.nome }}
             </option>
@@ -56,7 +56,8 @@ export default {
     return {
       faturas : [],
       clientes: [],
-      fatura: {cpf_cliente: 1},
+      fatura: Object,
+      id_cliente: Number,
       conta_pdf: Object,
     }
   },
@@ -128,7 +129,7 @@ export default {
                   console.log(JSON.stringify(error))
               }
           })
-        this.carregarConta()
+        await this.carregarConta()
     },
     carregarConta: async function (e){
         console.log(this.fatura)
@@ -152,6 +153,7 @@ export default {
     },
     async nova_fatura(){
       this.$store.commit('setIsLoading', true)
+      this.fatura={cpf_cliente: this.id_cliente}
       await axios
         .post ("/api/v1/faturamentos/",this.fatura)
         .then(response => {
@@ -164,8 +166,8 @@ export default {
             }
             console.log(error)
           })
-      this.upload_fatura()
-      this.getFaturamentos()
+      await this.upload_fatura()
+      await this.getFaturamentos()
       this.$store.commit('setIsLoading', false)
     },
     async apagar(fatura){

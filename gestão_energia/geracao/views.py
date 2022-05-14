@@ -28,7 +28,7 @@ class FaturamentosViewSet (ModelViewSet):
         return super(self.__class__, self).get_permissions()
     def perform_create(self, serializer):
         # Save with the new value for the target model fields
-        serializer.save(usuario = self.request.user)
+        serializer.save(usuario = self.request.user) 
 
 class ClientesViewSet (ModelViewSet):
     queryset = Cliente.objects.all()

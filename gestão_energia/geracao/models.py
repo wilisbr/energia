@@ -419,7 +419,7 @@ class Faturamento(models.Model):
         c.drawRightString(100,113,"Vencimento :")
         c.drawRightString(150,113,self.vencimento)
         c.drawRightString(100,126,"Cliente :")
-        c.drawRightString(250,126,"Estovadão") 
+        c.drawRightString(250,126,self.cpf_cliente.nome) 
         c.drawRightString(100,139,"Endereço :")
         c.drawRightString(280,139,self.endereco)
         c.drawRightString(480,139,"Desconto negociado no kwh: "+ str(self.desconto) + "%")

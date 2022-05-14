@@ -8,6 +8,7 @@
                 <table class="table is-fullwidth" v-if="clientes.length>0">
                     <thead>
                         <tr>
+                            <th>ID</th>
                             <th>CPF</th>
                             <th>Nome</th>
                             <th>Telefone</th>
@@ -18,10 +19,12 @@
                     <tbody>
                     <tr v-for="cliente in clientes"
                             v-bind:key="cliente.id">
+                        <td> <input v-model="cliente.id" type="number"></td> 
                         <td> <input v-model="cliente.cpf_cliente" type="number"></td>
                         <td> <input v-model="cliente.nome" type="text" > </td>
                         <td> <input v-model="cliente.telefone" type="text" > </td>
-                        <td> <button @click="gravar(cliente)">Gravar</button></td>
+                        <td> <button @click="gravar(cliente)">Gravar</button>
+                        <button @click="apagar(cliente)">Remover</button></td>
                     </tr>
                     <tr>
                       <td><input v-model="novo_cliente.cpf_cliente" type="number" id="cpf_cliente" name="cpf_cliente"></td>
@@ -88,6 +91,33 @@ export default {
         .put ("/api/v1/clientes/"+cliente.id+"/", cliente)
         .then(response => {
         console.log('gravado')
+        })
+        
+        .catch(error => {
+            if (error.response.status === 401) {
+                console.log('Ticket expirado. Necessário novo login')
+                this.logout()
+            }
+            console.log(error)
+          })    
+      
+      this.$store.commit('setIsLoading', false)
+    },
+    async apagar(cliente){
+      this.$store.commit('setIsLoading', true)
+      console.log(cliente)
+      await axios
+        .delete ("/api/v1/clientes/"+cliente.id+"/", cliente)
+        .then(response => {
+          toast ({
+          message: 'Cliente removido da base de dados',
+          type:'is-success',
+          dismissible: true,
+          pauseOnHover: true,
+          duration: 2000,
+          position: 'bottom-right'
+          })
+          this.getClientes()
         })
         
         .catch(error => {
