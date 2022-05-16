@@ -219,11 +219,11 @@ class TesteFaturamento(TestCase):
 
     def test_calculaEconomia(self):
         self.assertEqual(self.faturamentoGoitacazesAbril.economia_percentual,
-                         0.17917323409377967)
-        self.assertEqual(self.faturamentoCharlesAbril.economia_percentual, 0.1306491476813323)
+                         17.917323409377968)
+        self.assertEqual(self.faturamentoCharlesAbril.economia_percentual, 13.06491476813323)
         self.assertEqual(self.faturamentoRJAbril.economia_percentual,
-                         0.11602574487069707)
+                         11.602574487069706)
         self.assertEqual(self.faturamentoEstovadaoAbril.economia_percentual,
-                         0.1038107323880337)
-        self.assertEqual(self.faturamentoRosi.economia_percentual, 0.07360372493047865)
+                         10.38107323880337)
+        self.assertEqual(self.faturamentoRosi.economia_percentual, 7.360372493047865)
 

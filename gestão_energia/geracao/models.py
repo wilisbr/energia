@@ -28,18 +28,33 @@ class Cliente(models.Model):
     ----------
     cpf_cliente: int
         CPF do cliente.
+    email: e-mail 
+        Email do cliente
+    endereco: string
+        Endereço da instalação
     nome: string
         Nome do cliente
     telefone: string
         Telefone do cliente
     usuario : str 
         Nome do usuario da plataforma que cadastrou o cliente
-    
+    percentual: decimal
+        Percentual de desconto para o cliente, sob o valor da tarifa da concessionária
+    bonus: decimal
+        Valor, em R$, que será dado de bônus ao cliente em cada fatura
+
     """
     cpf_cliente = models.IntegerField()
+    endereco=models.CharField (max_length=100, null=False, blank=True)
+    email=models.EmailField(null=False, blank=False)
     usuario= models.CharField(max_length=40, null=True, blank=True)
-    nome = models.TextField(null=False, blank=False)
-    telefone = models.TextField(null=True, blank=True)
+    nome = models.TextField(null=False, max_length=40, blank=False)
+    telefone = models.TextField(null=True, max_length=15, blank=True)
+    desconto=models.FloatField(null=False,blank=False, default=20)
+    bonus=models.FloatField(null=False,blank=False, default=0)
+
+
+    
 
     def gravar(self):
         self.save()

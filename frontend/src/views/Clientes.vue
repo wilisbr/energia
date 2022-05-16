@@ -8,10 +8,13 @@
                 <table class="table is-fullwidth" v-if="clientes.length>0">
                     <thead>
                         <tr>
-                            <th>ID</th>
                             <th>CPF</th>
                             <th>Nome</th>
+                            <th>Endereço</th>
+                            <th>E-mail</th>
                             <th>Telefone</th>
+                            <th>Desconto</th>
+                            <th>Bônus</th>
                             <th>Ação</th>
                         </tr>
                     </thead>
@@ -19,17 +22,24 @@
                     <tbody>
                     <tr v-for="cliente in clientes"
                             v-bind:key="cliente.id">
-                        <td> <input v-model="cliente.id" type="number"></td> 
-                        <td> <input v-model="cliente.cpf_cliente" type="number"></td>
-                        <td> <input v-model="cliente.nome" type="text" > </td>
-                        <td> <input v-model="cliente.telefone" type="text" > </td>
+                        <td> <input v-model="cliente.cpf_cliente" type="number" max="99999999999" style="width: 11em" size="11"></td>
+                        <td> <input v-model="cliente.nome" type="text" max="40"> </td>
+                        <td> <input v-model="cliente.endereco" type="text" max="100"> </td>
+                        <td> <input v-model="cliente.email" type="text" max="40"> </td>
+                        <td> <input v-model="cliente.telefone" type="text" size="15" max="15"> </td>
+                        <td> <input v-model="cliente.desconto" type="number" min="0" step="0.01" size="4"></td>
+                        <td> <input v-model="cliente.bonus" type="number" min="0" max="100" step="0.01"></td>
                         <td> <button @click="gravar(cliente)">Gravar</button>
                         <button @click="apagar(cliente)">Remover</button></td>
                     </tr>
                     <tr>
                       <td><input v-model="novo_cliente.cpf_cliente" type="number" id="cpf_cliente" name="cpf_cliente"></td>
                       <td><input v-model="novo_cliente.nome" type="text" id="nome" name="nome"></td>
+                      <td><input v-model="novo_cliente.endereco" type="text" max="100"> </td>
+                      <td><input v-model="novo_cliente.email" type="text" max="40"> </td>
                       <td><input v-model="novo_cliente.telefone" type="text" id="telefone" name="telefone"></td>
+                      <td><input v-model="novo_cliente.desconto" type="number" min="0" step="0.01" size="4"></td>
+                      <td><input v-model="novo_cliente.bonus" type="number" min="0" max="100" step="0.01"></td>
                       <td><button @click="novo(novo_cliente)">Incluir</button></td>
                     </tr>
                     </tbody>
@@ -170,3 +180,8 @@ export default {
 
 }
 </script>
+<style scoped>
+input[type='number']{
+    width: 60px;
+} 
+</style>
