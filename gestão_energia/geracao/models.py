@@ -194,6 +194,15 @@ class Faturamento(models.Model):
         blank=True,
         null=True)
 
+    def baixarDadosCliente(self):
+        '''
+        Copia os valores dos atributos bonus,endereco e desconto do objeto cliente, quando associado
+        '''
+        if (self.cpf_cliente):
+            self.bonus=self.cpf_cliente.bonus
+            self.endereco=self.cpf_cliente.endereco
+            self.desconto=self.cpf_cliente.desconto
+
     def carregarConta(self, *args, **kwargs):
         '''
         Carrega uma conta de energia no objeto, extraindo do PDF os valores e armazenando-os nos atributos.
@@ -293,6 +302,7 @@ class Faturamento(models.Model):
         self.tarifa = self.custo_disponibilidade / franquiaOficial[
             self.porte] if math.isnan(self.tarifa) else self.tarifa
 
+        self.baixarDadosCliente()
         self.calcularFaturaSemEnergiaFotovoltaica()
         self.calcularFaturaComEnergiaFotovoltaica()
         self.calculaEconomia()
