@@ -95,6 +95,8 @@ class Faturamento(models.Model):
         Quantidade injetada na conta do cliente, em khw
     instalacao: int
         Número da instalação
+    nomeCliente: str
+        Nome do Cliente
     porte : str
         Pode ser Monofásico, Bifásico ou Trifásico
     referencia: str
@@ -168,6 +170,7 @@ class Faturamento(models.Model):
                                    null=True,
                                    blank=True)
     instalacao = models.IntegerField (null=True, blank=True)
+    nome=models.CharField(max_length=40, null=True, blank=True)
     porte = models.CharField(max_length=15, null=True, blank=True)
     referencia = models.CharField (max_length=8, null=True, blank=True)
     tarifa = models.FloatField(
@@ -200,6 +203,7 @@ class Faturamento(models.Model):
         '''
         if (self.cpf_cliente):
             self.bonus=self.cpf_cliente.bonus
+            self.nome=self.cpf_cliente.nome
             self.endereco=self.cpf_cliente.endereco
             self.desconto=self.cpf_cliente.desconto
 
@@ -441,10 +445,10 @@ class Faturamento(models.Model):
         c.drawRightString(100,113,"Vencimento :")
         c.drawRightString(150,113,self.vencimento)
         c.drawRightString(100,126,"Cliente :")
-        c.drawRightString(250,126,self.cpf_cliente.nome) 
+        c.drawRightString(250,126,self.nome) 
         c.drawRightString(100,139,"Endereço :")
-        c.drawRightString(280,139,self.endereco)
-        c.drawRightString(480,139,"Desconto negociado no kwh: "+ str(self.desconto) + "%")
+        c.drawRightString(500,139,self.endereco)
+        c.drawRightString(480,129,"Desconto negociado no kwh: "+ str(self.desconto) + "%")
         c.roundRect(15,150,260,220,10,stroke=1,fill=0)
         c.setFont("Courier-Bold",11)
         c.drawCentredString(150,160,"Simulação SEM energia fotovoltaica")
