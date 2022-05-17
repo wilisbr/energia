@@ -53,9 +53,6 @@ class Cliente(models.Model):
     desconto=models.FloatField(null=False,blank=False, default=20)
     bonus=models.FloatField(null=False,blank=False, default=0)
 
-
-    
-
     def gravar(self):
         self.save()
 

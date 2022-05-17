@@ -4,6 +4,9 @@
       <div class="column is-12">
           <h1 class="title">Faturas</h1>
       </div>
+      <div class="notification is-danger" v-if="errors.length">
+        <p v-for="error in errors" v-bind:key="error">{{ error }}</p>
+      </div>
       <div class="column is-12 box">
         <form @submit.prevent="nova_fatura">
           <label>Cliente</label>
@@ -56,14 +59,16 @@ export default {
     return {
       faturas : [],
       clientes: [],
+      errors: [],
       fatura: Object,
-      id_cliente: Number,
+      id_cliente: -1,
       conta_pdf: Object,
     }
   },
   components: {
 
   },
+  
   mounted(){
     this.$store.commit('setIsLoading', true)
     this.getFaturamentos()
@@ -85,6 +90,18 @@ export default {
       this.$store.commit('removeToken')
       this.$router.push('/log-in')
     },
+    async validar_campos(){
+      this.errors=[]
+      console.log(this.id_cliente)
+      if (this.id_cliente==-1){
+        this.errors.push('Necessário escolher o cliente antes de incluir a fatura')
+      }
+      if (this.conta_pdf.name === 'Object') {
+        console.log('Arquivo vazio')
+        this.errors.push('É necessário anexar uma fatura de energia.')
+        return null
+      }
+    },
     async getClientes(){
       await new Promise(r => setTimeout(r, 1000));
       await axios
@@ -92,7 +109,6 @@ export default {
         .then(response => {this.clientes=response.data
         console.log(response)
         })
-        
         .catch(error => {
             if (error.response.status === 401) {
                 console.log('Ticket expirado. Necessário novo login')
@@ -115,60 +131,65 @@ export default {
       }
       axios.defaults.headers.put['Content-Type']='application/json' 
       await axios
-          .put (`/api/v1/faturamentos/${this.fatura.id}/`, formData)
-          .then (response => {
-              this.fatura=response.data
-          })
-          .catch(error => {
-              if (error.response) {
-                  for (const property in error.response.data) {
-                      this.errors.push(`${property}: ${error.response.data[property]}`)
-                  }
-              } else {
-                  this.errors.push('Something went wrong. Please try again')
-                  console.log(JSON.stringify(error))
-              }
-          })
-        await this.carregarConta()
-    },
-    carregarConta: async function (e){
-        console.log(this.fatura)
-        let formData = new FormData();
-        formData.append('id', this.fatura.id);
-        await axios
-          .post (`/api/v1/carregarConta`, formData)
-          .then (response => {
-              this.fatura=response.data
-          })
-          .catch(error => {
-              if (error.response) {
-                  for (const property in error.response.data) {
-                      this.errors.push(`${property}: ${error.response.data[property]}`)
-                  }
-              } else {
-                  this.errors.push('Something went wrong. Please try again')
-                  console.log(JSON.stringify(error))
-              }
-          })
-    },
-    async nova_fatura(){
-      this.$store.commit('setIsLoading', true)
-      this.fatura={cpf_cliente: this.id_cliente}
-      await axios
-        .post ("/api/v1/faturamentos/",this.fatura)
-        .then(response => {
-          this.fatura=response.data
+        .put (`/api/v1/faturamentos/${this.fatura.id}/`, formData)
+        .then (response => {
+            this.fatura=response.data
         })
         .catch(error => {
-            if (error.response.status === 401) {
-                console.log('Ticket expirado. Necessário novo login')
-                this.logout()
+            if (error.response) {
+                for (const property in error.response.data) {
+                    this.errors.push(`${property}: ${error.response.data[property]}`)
+                }
+            } else {
+                this.errors.push('Something went wrong. Please try again')
+                console.log(JSON.stringify(error))
             }
-            console.log(error)
+        })
+      await this.carregarConta()
+      
+    },
+    carregarConta: async function (e){
+      console.log(this.fatura)
+      let formData = new FormData();
+      formData.append('id', this.fatura.id);
+      await axios
+        .post (`/api/v1/carregarConta`, formData)
+        .then (response => {
+            this.fatura=response.data
+        })
+        .catch(error => {
+            if (error.response) {
+                for (const property in error.response.data) {
+                    this.errors.push(`${property}: ${error.response.data[property]}`)
+                }
+            } else {
+                this.errors.push('Something went wrong. Please try again')
+                console.log(JSON.stringify(error))
+            }
+        })
+    },
+    async nova_fatura(){
+      await this.validar_campos()
+      console.log(this.errors.length)
+      if (!this.errors.length) {
+        this.$store.commit('setIsLoading', true)
+        this.fatura={cpf_cliente: this.id_cliente}
+        await axios
+          .post ("/api/v1/faturamentos/",this.fatura)
+          .then(response => {
+            this.fatura=response.data
           })
-      await this.upload_fatura()
-      await this.getFaturamentos()
-      this.$store.commit('setIsLoading', false)
+          .catch(error => {
+              if (error.response.status === 401) {
+                  console.log('Ticket expirado. Necessário novo login')
+                  this.logout()
+              }
+              console.log(error)
+            })
+        await this.upload_fatura()
+        await this.getFaturamentos()
+        this.$store.commit('setIsLoading', false)
+      }
     },
     async apagar(fatura){
       this.$store.commit('setIsLoading', true)
@@ -212,7 +233,7 @@ export default {
         
         })
         .catch(error => {
-            console.log(error)
+            console.log('Cliente não encontrado')
           })    
       }
     },
