@@ -27,7 +27,7 @@
                             v-bind:key="cliente.id">
                         <td> <input v-model="cliente.cpf_cliente" type="number" max="99999999999" style="width: 11em" size="11"></td>
                         <td> <input v-model="cliente.nome" type="text" max="40"> </td>
-                        <td> <input v-model="cliente.endereco" type="text" max="100"> </td>
+                        <td> <input v-model="cliente.endereco" type="text" max="84"> </td>
                         <td> <input v-model="cliente.email" type="email" > </td>
                         <td> <input v-model="cliente.telefone" type="text" size="15" max="15"> </td>
                         <td> <input v-model="cliente.desconto" type="number" min="0" step="1" size="4">%</td>
@@ -38,7 +38,7 @@
                     <tr>
                       <td><input v-model="novo_cliente.cpf_cliente" type="number" max="99999999999" style="width: 11em" size="11"></td>
                       <td><input v-model="novo_cliente.nome" type="text" max="40"></td>
-                      <td><input v-model="novo_cliente.endereco" type="text" max="100"> </td>
+                      <td><input v-model="novo_cliente.endereco" type="text" max="84"> </td>
                       <td><input v-model="novo_cliente.email" type="email"> </td>
                       <td><input v-model="novo_cliente.telefone" type="text" size="15" max="15"></td>
                       <td><input v-model="novo_cliente.desconto" type="number" min="0" step="1" size="4">%</td>
