@@ -1,8 +1,8 @@
 <template>
   <div id="wrapper">
-    <nav class="navbar is-dark">
+    <nav class="navbar is-success">
       <div class="navbar-brand">
-        <router-link to="/" class="navbar-item"><strong> Gestão </strong></router-link> 
+        <router-link to="/" class="navbar-item"><strong> C.W. Gestão de Energia Fotovoltaica</strong></router-link> 
         <a class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbar-menu" @click="showMobileMenu = !showMobileMenu">
             <span aria-hidden="true"></span>
             <span aria-hidden="true"></span>
@@ -13,16 +13,12 @@
       <div class="navbar-end">
 
         <div class="navbar-menu" id="navbar-menu" v-bind:class="{'is-active': showMobileMenu }">
-          <div class="navbar-start">
-            <div class="navbar-item">
-              <router-link to="/about" class="navbar-item">Sobre</router-link>
-            </div>
-          </div>
+          
       
           <div class="navbar-item">
             <div class="buttons">
               <template v-if="$store.state.access!=''">
-                <router-link to="/clientes" class="navbar-item">Clientes</router-link>
+                <router-link to="/clientes" class="navbar-item">Instalações</router-link>
                 <router-link to="/faturas" class="navbar-item">Faturas</router-link>
                 <router-link to="/my-account" class="navbar-item">Meu Perfil</router-link>
               </template>

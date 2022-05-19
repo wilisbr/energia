@@ -141,7 +141,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 SIMPLE_JWT = {
     'AUTH_HEADER_TYPES': ('JWT',),
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=3600),
     'REFRESH_TOKEN_LIFETIME': timedelta(minutes=3600),
 }
 
@@ -151,8 +151,8 @@ SIMPLE_JWT = {
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.aol.com'
-EMAIL_HOST_USER = 'charles.wilis@aol.com'
-EMAIL_HOST_PASSWORD = 'oydvlhyifbqadkgv'
-DEFAULT_FROM_EMAIL = 'charles.wilis@aol.com'
+EMAIL_HOST_USER = 'cwgestao@aol.com'
+EMAIL_HOST_PASSWORD = 'jtolkvrncxaypitf'
+DEFAULT_FROM_EMAIL = 'cwgestao@aol.com'
 EMAIL_PORT = 587
 #http://127.0.0.1:8000/accounts/password_reset/
