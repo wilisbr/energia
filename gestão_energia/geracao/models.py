@@ -202,10 +202,10 @@ class Faturamento(models.Model):
         Copia os valores dos atributos bonus,endereco e desconto do objeto cliente, quando associado
         '''
         if (self.cpf_cliente):
-            self.bonus=self.cpf_cliente.bonus
-            self.nome=self.cpf_cliente.nome
-            self.endereco=self.cpf_cliente.endereco
-            self.desconto=self.cpf_cliente.desconto
+            self.bonus=float(self.cpf_cliente.bonus)
+            self.nome=str(self.cpf_cliente.nome)
+            self.endereco=str(self.cpf_cliente.endereco)
+            self.desconto=float(self.cpf_cliente.desconto)
 
     def carregarConta(self, *args, **kwargs):
         '''
@@ -279,7 +279,7 @@ class Faturamento(models.Model):
         obterIluminacaoPublica = kwargs.get('obterIluminacaoPublica', False)
         
         if ((kwargs.get('conta_pdf') == None) and (self.conta_pdf==None)):
-            print('Necessário informar o parâmetro "conta" ou preencher o atributo conta_pdf')
+            print('o atributo conta_pdf está vazio. Não a conta não será carregada. Faça upload do arquivo primeiro.')
             return None
 
         self.conta_pdf = kwargs.get('conta_pdf', self.conta_pdf)
@@ -306,7 +306,7 @@ class Faturamento(models.Model):
         self.tarifa = self.custo_disponibilidade / franquiaOficial[
             self.porte] if math.isnan(self.tarifa) else self.tarifa
 
-        self.baixarDadosCliente()
+        #self.baixarDadosCliente()
         self.calcularFaturaSemEnergiaFotovoltaica()
         self.calcularFaturaComEnergiaFotovoltaica()
         self.calculaEconomia()
@@ -332,6 +332,17 @@ class Faturamento(models.Model):
         ----------
 
         '''
+
+        #Caso seja a primeira vez em que se calcula a conta com energia injetada, baixe os parâmetros
+        #bonus e desconto do objeto cliente.
+        if (self.tarifaInjetada==None or self.tarifaInjetada==''):
+            self.baixarDadosCliente()
+        print ('Vamos ver como está a fatura:')
+        print (self.consumo_mes)
+        print (self.injetada)
+        
+
+
         self.franquia = self.consumo_mes - self.injetada
 
         #Tarifa cobrada do cliente, com o desconto definido

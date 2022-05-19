@@ -156,6 +156,10 @@ def extrairEnergiaInjetada(pag1: str) -> float:
 
     '''
     injetada = extrairExpressaoRegular(r'Energia injetada\D+\d+', pag1)[0]
+    
+    if injetada=='none':
+        return 0
+    
     injetada = extrairExpressaoRegular(r'\d+', injetada)[0]
     return (injetada)
 

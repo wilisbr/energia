@@ -9,14 +9,14 @@
       </div>
       <div class="column is-12 box">
         <form @submit.prevent="nova_fatura">
-          <label>Cliente</label>
-          <select v-model="id_cliente">
+          <label>Instalação cliente</label>
+          <select required v-model="id_cliente">
             <option v-for="cliente in clientes" v-bind:value="cliente.id" v-bind:key="cliente.id"> 
               {{ cliente.nome }}
             </option>
           </select>
           <br><br>
-          <input type="file"
+          <input required type="file"
             id="nova_fatura" name="nova_fatura"
             accept=".pdf" @change="onFileChange">
           <button type="submit">Inserir Fatura</button>
@@ -25,7 +25,7 @@
         <table class="table is-fullwidth" v-if="faturas.length>0">
           <thead>
             <tr>
-              <th>Cliente</th>
+              <th>Instalação</th>
               <th>Mês de Referência</th>
               <th>Ação</th>
             </tr>
@@ -36,8 +36,8 @@
               <td> {{fatura.nome_cliente}}</td>
               <td> {{fatura.referencia}} </td>
               <td> 
-              <button @click="$router.push('/fatura/'+fatura.id)">Gerar Cobrança</button>
-              <button @click="apagar(fatura)">Remover Fatura</button>  </td>
+              <button @click="$router.push('/fatura/'+fatura.id)">Faturar</button>
+              <button @click="apagar(fatura)">Remover</button>  </td>
             </tr>
           </tbody>
         </table>
@@ -89,18 +89,6 @@ export default {
       localStorage.removeItem("access")
       this.$store.commit('removeToken')
       this.$router.push('/log-in')
-    },
-    async validar_campos(){
-      this.errors=[]
-      console.log(this.id_cliente)
-      if (this.id_cliente==-1){
-        this.errors.push('Necessário escolher o cliente antes de incluir a fatura')
-      }
-      if (this.conta_pdf.name === 'Object') {
-        console.log('Arquivo vazio')
-        this.errors.push('É necessário anexar uma fatura de energia.')
-        return null
-      }
     },
     async getClientes(){
       await new Promise(r => setTimeout(r, 1000));
@@ -169,7 +157,6 @@ export default {
         })
     },
     async nova_fatura(){
-      await this.validar_campos()
       console.log(this.errors.length)
       if (!this.errors.length) {
         this.$store.commit('setIsLoading', true)

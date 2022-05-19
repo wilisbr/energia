@@ -1,6 +1,5 @@
 <template>
     <div class="page-cart">
-        
         <a :href="fatura.conta_pdf" target="_blank">Clique para ver fatura da concessionária</a>
         <br>
         <span> Substituir fatura da concessionária:   </span>
@@ -13,10 +12,10 @@
         <table className="padding-table-columns">
         <tr>
             <td><label>Percentual de desconto sob o KWh:</label>
-            <input type="number" min="0" max="100" step="1" v-model="fatura.desconto" /> %</td>
+            <input required type="number" min="0" max="100" step="1" v-model="fatura.desconto" /> %</td>
             <td>
                 <label>Bônus adicional (R$):</label>
-                <input type="number" name="bonus" v-model="fatura.bonus"> <br><br>
+                <input required v-model="fatura.bonus" type="number" min="0"  step="0.01"><br><br>
             </td>
             <td>
                 <button type="submit">Gravar</button>
@@ -126,26 +125,27 @@ export default {
           })
     }, 
       gravar: async function (e){
-            delete this.fatura.conta_pdf
-            await axios
-                .put (`/api/v1/faturamentos/${this.id}/`, this.fatura)
-                .then (response => {
-                    console.log('Deu certo!')
-                    console.log (response)
-                    this.fatura=response.data
-                    this.id_iFrameCobrancaPDF=this.id_iFrameCobrancaPDF+1
-                })
-                .catch(error => {
-                    if (error.response) {
-                        for (const property in error.response.data) {
-                            this.errors.push(`${property}: ${error.response.data[property]}`)
-                        }
-                    } else {
-                        this.errors.push('Something went wrong. Please try again')
-                        
-                        console.log(JSON.stringify(error))
+        delete this.fatura.conta_pdf
+        await axios
+            .put (`/api/v1/faturamentos/${this.id}/`, this.fatura)
+            .then (response => {
+                console.log('Deu certo!')
+                console.log (response)
+                this.fatura=response.data
+            })
+            .catch(error => {
+                if (error.response) {
+                    for (const property in error.response.data) {
+                        this.errors.push(`${property}: ${error.response.data[property]}`)
                     }
-                })
+                } else {
+                    this.errors.push('Something went wrong. Please try again')
+                    
+                    console.log(JSON.stringify(error))
+                }
+            })
+        await this.carregarConta()
+        this.id_iFrameCobrancaPDF=this.id_iFrameCobrancaPDF+1
       },
 
   },

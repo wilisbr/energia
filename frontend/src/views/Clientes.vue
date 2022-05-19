@@ -1,24 +1,24 @@
 <template>
     <div class="page-cart">
-        <div class="columns is-multiline">
+        <div class="columns is-multiline" >
             <div class="column is-12">
-                <h1 class="title">Clientes</h1>
+                <h1 class="title">Instalações clientes</h1>
             </div>
             <div class="column is-12 box">
                 <div class="notification is-danger" v-if="errors.length">
                   <p v-for="error in errors" v-bind:key="error">{{ error }}</p>
                 </div>
-                <table class="table is-fullwidth" v-if="clientes.length>0">
+                <table class="table is-fullwidth">
                     <thead>
                         <tr>
-                            <th>CPF</th>
-                            <th>Nome</th>
-                            <th>Endereço</th>
+                            <th>CPF do Cliente</th>
+                            <th>Nome da instalação</th>
+                            <th>Endereço da Instalação</th>
                             <th>E-mail</th>
                             <th>Telefone</th>
                             <th>Desconto</th>
                             <th>Bônus</th>
-                            <th>Ação</th>
+                            <th> </th>
                         </tr>
                     </thead>
 
@@ -29,9 +29,9 @@
                         <td> <input v-model="cliente.nome" type="text" max="40"> </td>
                         <td> <input v-model="cliente.endereco" type="text" max="84"> </td>
                         <td> <input v-model="cliente.email" type="email" > </td>
-                        <td> <input v-model="cliente.telefone" type="text" size="15" max="15"> </td>
-                        <td> <input v-model="cliente.desconto" type="number" min="0" step="1" size="4">%</td>
-                        <td> <input v-model="cliente.bonus" type="number" min="0" max="100" step="0.01"></td>
+                        <td> <input v-model="cliente.telefone" type="text" size="13" max="15"> </td>
+                        <td> <input v-model="cliente.desconto" type="number" min="0" max="100" step="1" size="3">%</td>
+                        <td> R$ <input v-model="cliente.bonus" type="number" min="0"  step="0.01"></td>
                         <td> <button @click="gravar(cliente)">Gravar</button>
                         <button @click="apagar(cliente)">Remover</button></td>
                     </tr>
@@ -40,15 +40,14 @@
                       <td><input v-model="novo_cliente.nome" type="text" max="40"></td>
                       <td><input v-model="novo_cliente.endereco" type="text" max="84"> </td>
                       <td><input v-model="novo_cliente.email" type="email"> </td>
-                      <td><input v-model="novo_cliente.telefone" type="text" size="15" max="15"></td>
-                      <td><input v-model="novo_cliente.desconto" type="number" min="0" step="1" size="4">%</td>
-                      <td><input v-model="novo_cliente.bonus" type="number" min="0" max="100" step="0.01"></td>
+                      <td><input v-model="novo_cliente.telefone" type="text" size="13" max="15"></td>
+                      <td><input v-model="novo_cliente.desconto" type="number" min="0" max="100" step="1" size="3">%</td>
+                      <td>R$<input v-model="novo_cliente.bonus" type="number" min="0" step="0.01"></td>
                       <td><button @click="novo(novo_cliente)">Incluir</button></td>
                     </tr>
                     </tbody>
                 </table>
 
-                <p v-else>Não foram encontrados clientes...</p>
             </div>
 
             
@@ -110,7 +109,13 @@ export default {
           return null
       }
       if (cliente.nome==''){
-        this.errors.push('Preencha o nome do cliente')
+        this.errors.push('Preencha o nome da instalação')
+      }
+      if (cliente.desconto<0 || cliente.desconto>100 || cliente.desconto==''){
+        this.errors.push('O valor de desconto deve ser entre 0% e 100%')
+      }
+      if (cliente.bonus<0 || cliente.bonus==''){
+        this.errors.push('O valor do bônus deve ser preenchido com 0 ou qualquer número positivo')
       }
     },
     async gravar(cliente){
@@ -167,7 +172,7 @@ export default {
             }
             console.log(error)
           })    
-      
+      await new Promise(r => setTimeout(r, 3000));
       this.$store.commit('setIsLoading', false)
     },
     async novo(cliente){
@@ -196,12 +201,12 @@ export default {
               }
               console.log(error)
             })    
+        await new Promise(r => setTimeout(r, 3000));
         this.$store.commit('setIsLoading', false)
       }
     },
     async getClientes(){
       this.$store.commit('setIsLoading', true)
-      await new Promise(r => setTimeout(r, 1000));
       await axios
         .get ("/api/v1/clientes/")
         .then(response => {this.clientes=response.data
