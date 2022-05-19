@@ -8,7 +8,7 @@
       faz o upload da conta de luz no formato PDF (o arquivo deverá ser baixado do site da CEMIG). Com poucos segundos 
       você terá em mãos um documento explicando ao seu cliente o quanto ele economizou e quanto dele deverá te pagar.</p>
       Caso você precise fazer uma gestão completa, incluindo prospecção de clientes, relacionamento e cobrança, entre
-      em contato para firmarmos uma paceria <strong>(gestao_fotovoltaica@gmail.com).</strong> Caso você opter por fazer todo o trabalho, 
+      em contato para firmarmos uma paceria <strong>(gestao_fotovoltaica@aol.com).</strong> Caso você opter por fazer todo o trabalho, 
       sinta-se livre para utilizar este sistema de forma <strong>gratuita!</strong>
 
       <h2> Instruções de uso </h2>

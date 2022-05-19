@@ -24,10 +24,9 @@ c.drawCentredString(165,20,"CW Gestão Energia")
 c.line(70,22,260,22)
 # Changing the font size for Specifying Address
 c.setFont("Helvetica-Bold",10)
-c.drawCentredString(165,35,"charles.wilis@gmail.com")
+c.drawCentredString(165,35,"cwgestao@gmail.com")
 # Changing the font size for Specifying GST Number of firm
 c.setFont("Helvetica-Bold",8)
-c.drawCentredString(165,45,"31 99926-8659")
 # Line Seprating the page header from the body
 c.line(5,58,555,58)
 # Document Information

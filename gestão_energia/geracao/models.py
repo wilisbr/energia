@@ -436,10 +436,9 @@ class Faturamento(models.Model):
         c.line(70,22,260,22)
         # Changing the font size for Specifying Address
         c.setFont("Helvetica-Bold",10)
-        c.drawCentredString(165,35,"charles.wilis@gmail.com")
+        c.drawCentredString(165,35,"cwgestao@aol.com")
         # Changing the font size for Specifying GST Number of firm
         c.setFont("Helvetica-Bold",8)
-        c.drawCentredString(165,45,"31 99926-8659")
         # Line Seprating the page header from the body
         c.line(5,58,555,58)
         # Document Information
@@ -459,7 +458,7 @@ class Faturamento(models.Model):
         c.drawRightString(250,126,self.nome) 
         c.drawRightString(100,139,"Endereço :")
         c.drawRightString(500,139,self.endereco)
-        c.drawRightString(480,129,"Desconto negociado no kwh: "+ str(self.desconto) + "%")
+        c.drawRightString(480,120,"Desconto negociado no KWh: "+ str(self.desconto) + "%")
         c.roundRect(15,150,260,220,10,stroke=1,fill=0)
         c.setFont("Courier-Bold",11)
         c.drawCentredString(150,160,"Simulação SEM energia fotovoltaica")
@@ -496,8 +495,8 @@ class Faturamento(models.Model):
         c.drawRightString(520,180,"R$ "+"{:.2f}".format(self.valorInjetado))
         c.drawRightString(374,195,"Iluminação Pública:")
         c.drawRightString(520,195,"R$ "+str(self.iluminacaoPublica))
-        c.drawRightString(396,210,"Custo de disponibilidade:")
-        c.drawRightString(440,210,"{:.0f}".format(self.consumo_mes-self.injetada) + " KWh")
+        c.drawRightString(424,210,"Concessionaria / disponibilidade:")
+        c.drawRightString(465,210,"{:.0f}".format(self.consumo_mes-self.injetada) + " KWh")
         c.drawRightString(520,210,"R$ "+"{:.2f}".format(self.custo_disponibilidade))
         c.drawRightString(318,225,"Bônus:")
         c.drawRightString(520,225,"-R$ {:.2f}".format(self.bonus))
