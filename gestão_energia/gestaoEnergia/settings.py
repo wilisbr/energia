@@ -27,7 +27,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'wilis.pythonanywhere.com']
 
-CORS_ALLOWED_ORIGINS = ['http://localhost:8080', 'http://localhost:8081', 'http://127.0.0.1:8000']
+CORS_ALLOWED_ORIGINS = ['http://localhost:8080', 'http://localhost:8081', 'http://127.0.0.1:8000', 'https://wilis.pythonanywhere.com']
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES':
