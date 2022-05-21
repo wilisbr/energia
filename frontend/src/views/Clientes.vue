@@ -30,7 +30,8 @@
                         <td> <input v-model="cliente.desconto" type="number" min="0" max="100" step="1" size="3">%</td>
                         <td> R$ <input v-model="cliente.bonus" type="number" min="0"  step="0.01"></td>
                         <td> <button @click="gravar(cliente)">Gravar</button>
-                        <button @click="apagar(cliente)">Remover</button></td>
+                        <button @click="apagar(cliente)">Remover</button>
+                        <button @click="$router.push('/cliente/'+cliente.id)">Editar</button></td>
                     </tr>
                     <tr>
                       <td><input v-model="novo_cliente.cpf_cliente" type="number" max="99999999999" style="width: 11em" size="11"></td>
@@ -63,7 +64,7 @@ export default {
   data() {
     return {
       clientes : [],
-      cliente: Number,
+      cliente: Object,
       errors: [],
       novo_cliente: {
                 cpf_cliente: Number,

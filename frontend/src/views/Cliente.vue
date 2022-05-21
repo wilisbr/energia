@@ -1,57 +1,23 @@
 <template>
     <div class="container">
-        <div class="columns is-multiline" >
-            <div class="column is-12">
-                <h1 class="title">Instalações clientes</h1>
-            </div>
-            <div class="column is-12 box">
-                <div class="notification is-danger" v-if="errors.length">
-                  <p v-for="error in errors" v-bind:key="error">{{ error }}</p>
-                </div>
-                <table class="table is-fullwidth">
-                    <thead>
-                        <tr>
-                            <th>CPF do Cliente</th>
-                            <th>Nome da instalação</th>
-                            <th>Endereço da Instalação</th>
-                            <th>E-mail</th>
-                            <th>Telefone</th>
-                            <th>Desconto</th>
-                            <th>Bônus</th>
-                            <th> </th>
-                        </tr>
-                    </thead>
+      <div class="notification is-danger" v-if="errors.length">
+        <p v-for="error in errors" v-bind:key="error">{{ error }}</p>
+      </div>
+      <table class="table">
+        <tbody>
+          <tr> <td>CPF do Cliente</td> <td> <input v-model="cliente.cpf_cliente" type="number" max="99999999999" style="width: 11em" size="11"></td></tr>
+          <tr> <td>Nome da Instalação</td> <td> <input v-model="cliente.nome" type="text" max="40"> </td></tr>
+          <tr> <td>Endereço</td> <td> <input v-model="cliente.endereco" type="text" max="84"> </td></tr>
+          <tr> <td>E-mail</td> <td> <input v-model="cliente.email" type="email" > </td></tr>
+          <tr> <td>Telefone</td> <td> <input v-model="cliente.telefone" type="text" size="13" max="15"> </td></tr>
+          <tr> <td>Desconto</td> <td> <input v-model="cliente.desconto" type="number" min="0" max="100" step="1" size="3">%</td></tr>
+          <tr> <td>Bônus</td> <td> R$ <input v-model="cliente.bonus" type="number" min="0"  step="0.01"></td></tr>
+      
+          
 
-                    <tbody>
-                    <tr v-for="cliente in clientes"
-                            v-bind:key="cliente.id">
-                        <td> <input v-model="cliente.cpf_cliente" type="number" max="99999999999" style="width: 11em" size="11"></td>
-                        <td> <input v-model="cliente.nome" type="text" max="40"> </td>
-                        <td> <input v-model="cliente.endereco" type="text" max="84"> </td>
-                        <td> <input v-model="cliente.email" type="email" > </td>
-                        <td> <input v-model="cliente.telefone" type="text" size="13" max="15"> </td>
-                        <td> <input v-model="cliente.desconto" type="number" min="0" max="100" step="1" size="3">%</td>
-                        <td> R$ <input v-model="cliente.bonus" type="number" min="0"  step="0.01"></td>
-                        <td> <button @click="gravar(cliente)">Gravar</button>
-                        <button @click="apagar(cliente)">Remover</button></td>
-                    </tr>
-                    <tr>
-                      <td><input v-model="novo_cliente.cpf_cliente" type="number" max="99999999999" style="width: 11em" size="11"></td>
-                      <td><input v-model="novo_cliente.nome" type="text" max="40"></td>
-                      <td><input v-model="novo_cliente.endereco" type="text" max="84"> </td>
-                      <td><input v-model="novo_cliente.email" type="email"> </td>
-                      <td><input v-model="novo_cliente.telefone" type="text" size="13" max="15"></td>
-                      <td><input v-model="novo_cliente.desconto" type="number" min="0" max="100" step="1" size="3">%</td>
-                      <td>R$<input v-model="novo_cliente.bonus" type="number" min="0" step="0.01"></td>
-                      <td><button @click="novo(novo_cliente)">Incluir</button></td>
-                    </tr>
-                    </tbody>
-                </table>
-
-            </div>
-
-            
-        </div>
+        </tbody>
+      </table>
+      <button @click="gravar(cliente)">Gravar</button>
     </div>
 </template>
 
@@ -59,25 +25,22 @@
 /* eslint-disable */
 import axios from 'axios'
 import {toast} from 'bulma-toast'
-import { Text } from '@vue/runtime-core'
-
  
 export default {
   name: 'Clientes',
   data() {
     return {
-      clientes : [],
-      cliente: Number,
+      cliente: Object,
       errors: [],
       novo_cliente: {
-                cpf_cliente: Number,
-                nome: '',
-                telefone: '',
-                endereco: '', 
-                email: '',
-                desconto:20 ,
-                bonus:0 ,
-            },
+          cpf_cliente: Number,
+          nome: '',
+          telefone: '',
+          endereco: '', 
+          email: '',
+          desconto:20 ,
+          bonus:0 ,
+      },
     }
   },
   
@@ -85,7 +48,6 @@ export default {
 
   },
   mounted(){
-    this.getClientes()
   },
   methods:{
     logout() {
@@ -148,33 +110,6 @@ export default {
         this.$store.commit('setIsLoading', false)
       }
     },
-    async apagar(cliente){
-      this.$store.commit('setIsLoading', true)
-      console.log(cliente)
-      await axios
-        .delete ("/api/v1/clientes/"+cliente.id+"/", cliente)
-        .then(response => {
-          toast ({
-          message: 'Cliente removido da base de dados',
-          type:'is-success',
-          dismissible: true,
-          pauseOnHover: true,
-          duration: 2000,
-          position: 'bottom-right'
-          })
-          this.getClientes()
-        })
-        
-        .catch(error => {
-            if (error.response.status === 401) {
-                console.log('Ticket expirado. Necessário novo login')
-                this.logout()
-            }
-            console.log(error)
-          })    
-      await new Promise(r => setTimeout(r, 3000));
-      this.$store.commit('setIsLoading', false)
-    },
     async novo(cliente){
       await this.validar_campos(cliente)
       if (!this.errors.length) {
@@ -204,23 +139,6 @@ export default {
         await new Promise(r => setTimeout(r, 3000));
         this.$store.commit('setIsLoading', false)
       }
-    },
-    async getClientes(){
-      this.$store.commit('setIsLoading', true)
-      await axios
-        .get ("/api/v1/clientes/")
-        .then(response => {this.clientes=response.data
-        console.log(response)
-        })
-        
-        .catch(error => {
-            if (error.response.status === 401) {
-                console.log('Ticket expirado. Necessário novo login')
-                this.logout()
-            }
-            console.log(error)
-          })    
-      this.$store.commit('setIsLoading', false)
     },
   }
 

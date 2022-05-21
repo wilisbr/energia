@@ -6,6 +6,7 @@ import MyAccount from '../views/MyAccount.vue'
 import Faturas from '../views/Faturas.vue'
 import Fatura from '../views/Fatura.vue'
 import Clientes from '../views/Clientes.vue'
+import Cliente from '../views/Cliente.vue'
 import store from '../store'
 
 const routes = [
@@ -52,6 +53,14 @@ const routes = [
     path: '/fatura/:id',
     name: 'Fatura',
     component: Fatura,
+    meta: {
+        requireLogin: true
+    }
+  },
+  {
+    path: '/cliente/:id',
+    name: 'Cliente',
+    component: Cliente,
     meta: {
         requireLogin: true
     }
