@@ -1,14 +1,11 @@
 <template>
     <div class="container">
         <div class="columns is-multiline" >
-            <div class="column is-12">
-                <h1 class="title">Instalações clientes</h1>
-            </div>
-            <div class="column is-12 box">
+          <h1 class="title">Instalações clientes</h1>
                 <div class="notification is-danger" v-if="errors.length">
                   <p v-for="error in errors" v-bind:key="error">{{ error }}</p>
                 </div>
-                <table class="table is-fullwidth">
+                <table class="table">
                     <thead>
                         <tr>
                             <th>CPF do Cliente</th>
@@ -51,7 +48,6 @@
             </div>
 
             
-        </div>
     </div>
 </template>
 
