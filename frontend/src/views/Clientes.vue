@@ -1,5 +1,5 @@
 <template>
-    <div class="page-cart">
+    <div class="container">
         <div class="columns is-multiline" >
             <div class="column is-12">
                 <h1 class="title">Instalações clientes</h1>

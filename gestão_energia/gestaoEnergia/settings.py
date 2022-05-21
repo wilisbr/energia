@@ -25,9 +25,9 @@ SECRET_KEY = 'django-insecure-h)n&i&@n&l*7y*_sq*1a1f9^!(q-2z$7bnph#84#w1fyp9uvr1
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'wilis.pythonanywhere.com']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'wilis.pythonanywhere.com' '192.168.15.104']
 
-CORS_ALLOWED_ORIGINS = ['http://localhost:8080', 'http://localhost:8081', 'http://127.0.0.1:8000', 'https://wilis.pythonanywhere.com']
+CORS_ALLOWED_ORIGINS = ['http://localhost:8080', 'http://localhost:8081', 'http://127.0.0.1:8000', 'http://192.168.15.104:8000', 'https://wilis.pythonanywhere.com']
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES':
