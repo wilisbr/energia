@@ -19,7 +19,8 @@
         </tr>
         </table>
         </form>
-        <iframe :key="id_iFrameCobrancaPDF" :src="`http://localhost:8000/api/v1/getFaturaPdf?id=${id}`" width="100%" height="700px"></iframe>
+        <iframe :key="id_iFrameCobrancaPDF" :src="`${baseURL}/api/v1/getFaturaPdf?id=${id}`" width="100%" height="700px"></iframe>
+        <p> {{baseURL}} </p>
     </div>
 </template>
 
@@ -38,7 +39,8 @@ export default {
       id:this.$route.params.id,
       fatura: Object,
       conta_pdf: Object,
-      id_iFrameCobrancaPDF: Number
+      id_iFrameCobrancaPDF: Number,
+      baseURL: String
     }
   },
   components: {
@@ -50,6 +52,7 @@ export default {
   mounted(){
     this.id_iFrameCobrancaPDF=0
     this.getFatura()
+    this.baseURL= axios.defaults.baseURL
     //this.downloadFatura()
   },
   methods:{
