@@ -51,6 +51,8 @@ export default {
       showMobileMenu: false,
    }
   },
+  mounted(){
+  },
   beforeCreate() {
     this.$store.commit('initializeStore')
 

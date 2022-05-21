@@ -8,7 +8,13 @@ import axios from 'axios'
 //axios.defaults.baseURL = 'http://127.0.0.1:8000'
 
 //Prod:
-axios.defaults.baseURL = 'https://wilis.pythonanywhere.com'
+//axios.defaults.baseURL = 'https://wilis.pythonanywhere.com'
 
+axios.defaults.baseURL = window.location.origin
+
+//Se estiver rodando no ambiente de desenvolvimento, avise o axios que é pra acessar a porta 8000.
+if (axios.defaults.baseURL=='http://localhost:8080'){
+    axios.defaults.baseURL = 'http://127.0.0.1:8000'
+}
 
 createApp(App).use(store).use(router,axios).mount('#app')

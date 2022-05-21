@@ -54,7 +54,6 @@ export default {
   },
   mounted(){
     //this.getMe(),
-    
   },
   methods:{
     getMe(e){
