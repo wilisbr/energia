@@ -65,7 +65,7 @@ const routes = [
         requireLogin: true
     }
   },
-  { path: "*", component: HomeView }
+  { path: '/:pathMatch(.*)*', component: HomeView }
 ]
 
 const router = createRouter({
