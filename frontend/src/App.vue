@@ -52,6 +52,7 @@ export default {
    }
   },
   mounted(){
+    document.title = 'CW Gestão'
     this.$router.push('/')
   },
   beforeCreate() {
