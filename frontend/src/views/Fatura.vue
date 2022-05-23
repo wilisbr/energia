@@ -60,7 +60,6 @@ export default {
         await axios
         .get ("/api/v1/faturamentos/"+this.id+"/")
         .then(response => {this.fatura=response.data
-        console.log(response)
         })
         .catch(error => {
             console.log(error)
@@ -91,8 +90,6 @@ export default {
         await axios
             .put (`/api/v1/faturamentos/${this.id}/`, this.fatura)
             .then (response => {
-                console.log('Deu certo!')
-                console.log (response)
                 this.fatura=response.data
             })
             .catch(error => {

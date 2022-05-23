@@ -91,11 +91,9 @@ export default {
       this.$router.push('/log-in')
     },
     async getClientes(){
-      await new Promise(r => setTimeout(r, 1000));
       await axios
         .get ("/api/v1/clientes/")
         .then(response => {this.clientes=response.data
-        console.log(response)
         })
         .catch(error => {
             if (error.response.status === 401) {
@@ -137,7 +135,6 @@ export default {
       
     },
     carregarConta: async function (e){
-      console.log(this.fatura)
       let formData = new FormData();
       formData.append('id', this.fatura.id);
       await axios
@@ -157,7 +154,6 @@ export default {
         })
     },
     async nova_fatura(){
-      console.log(this.errors.length)
       if (!this.errors.length) {
         this.$store.commit('setIsLoading', true)
         this.fatura={cpf_cliente: this.id_cliente}
@@ -200,8 +196,6 @@ export default {
       await axios
         .get ("/api/v1/faturamentos/")
         .then(response => {this.faturas=response.data
-        console.log(response)
-        
         })
         .catch(error => {  
             if (error.response.status === 401) {
