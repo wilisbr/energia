@@ -8,6 +8,8 @@
         <tr>
             <td><label>Percentual de desconto sob o KWh:</label>
             <input required type="number" min="0" max="100" step="1" v-model="fatura.desconto" /> %</td>
+        </tr>
+        <tr>
             <td>
                 <label>Bônus adicional (R$):</label>
                 <input required v-model="fatura.bonus" type="number" min="0"  step="0.01"><br><br>

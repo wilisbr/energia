@@ -10,7 +10,7 @@
                 <p v-for="error in errors" v-bind:key="error">{{ error }}</p>
             </div>
             <button type="submit">Log in</button>
-            <a href='http://127.0.0.1:8000/accounts/password_reset/'> Esqueci minha senha </a>
+            <a href="`${this.$axios.defaults.baseURL}/accounts/password_reset/`"> Esqueci minha senha </a>
             Ou <router-link to="/sign-up">Clique aqui</router-link> para se cadastrar!
         </form>
     </div>
@@ -45,7 +45,7 @@ export default {
                     this.$store.commit('setAccess', access)
                     axios.defaults.headers.common['Authorization']= "JWT "+access
                     localStorage.setItem("access",access)
-                    this.$router.push("/")
+                    this.$router.push("/clientes")
                 })
                 .catch(error => {
                     if (error.response) {
