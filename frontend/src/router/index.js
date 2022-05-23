@@ -65,6 +65,7 @@ const routes = [
         requireLogin: true
     }
   },
+  { path: "*", component: HomeView }
 ]
 
 const router = createRouter({
