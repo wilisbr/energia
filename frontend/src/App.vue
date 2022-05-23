@@ -52,6 +52,7 @@ export default {
    }
   },
   mounted(){
+    this.$router.push('/')
   },
   beforeCreate() {
     this.$store.commit('initializeStore')
