@@ -64,7 +64,6 @@ export default {
     } else {
       axios.defaults.headers.common['Authorization'] =''
     }
-    console.log(axios.defaults.headers.common['Authorization'])
     document.title='Gestão Energia'
   },
 }
