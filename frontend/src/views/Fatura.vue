@@ -30,8 +30,6 @@ import axios from 'axios'
 import {toast} from 'bulma-toast'
 import download from 'downloadjs'
 
-
-
 export default {
   name: 'Fatura',
   data() {
