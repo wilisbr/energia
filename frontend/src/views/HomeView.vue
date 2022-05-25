@@ -30,7 +30,7 @@
       e envie para seu cliente!</p>
 
       Caso você precise fazer uma gestão completa, incluindo prospecção de clientes, relacionamento e cobrança, entre
-      em contato para firmarmos uma paceria <strong>(gestao_fotovoltaica@aol.com).</strong> Caso você opte por fazer todo o trabalho, 
+      em contato para firmarmos uma paceria <strong>(cwgestao@aol.com).</strong> Caso você opte por fazer todo o trabalho, 
       sinta-se livre para utilizar este sistema de forma <strong>gratuita.</strong>
 
     </div>

@@ -63,6 +63,9 @@ class Faturamento(models.Model):
     ...
     Attributes
     ----------
+    acerto: decimal
+        Valor creditado/debitado na conta decorrente de pagamentos a maior/menor em faturas passadas
+        É comum em instalações rurais
     conta_pdf: file
         Arquivo PDF contendo a conta.
     bonus : decimal
@@ -130,6 +133,7 @@ class Faturamento(models.Model):
         Prints the person's name and age.
     """
     conta_pdf = models.FileField(upload_to='contas_pdf', null=True, blank=True)
+    distribuidora= models.CharField(max_length=10,null=False, blank=False)
     desconto = models.FloatField(
                                    null=False,
                                    blank=False,
@@ -173,6 +177,7 @@ class Faturamento(models.Model):
     nome=models.CharField(max_length=40, null=True, blank=True)
     porte = models.CharField(max_length=15, null=True, blank=True)
     referencia = models.CharField (max_length=8, null=True, blank=True)
+    acerto= models.FloatField(null=False,blank=False, default=0)
     tarifa = models.FloatField(
                                  null=True,
                                  blank=True)
@@ -252,6 +257,7 @@ class Faturamento(models.Model):
 
         ----------
         Atributos atualizados pelo método:
+        acerto
         conta_pdf
         consumo_mes
         desconto
@@ -273,6 +279,7 @@ class Faturamento(models.Model):
         extrairNumeroInstalacao = kwargs.get('extrairNumeroInstalacao', False)
         extrairEnergiaInjetada = kwargs.get('extrairEnergiaInjetada', False)
         extrairReferencia = kwargs.get('extrairReferencia', False)
+        extrairSaldoResidual=kwargs.get('extrairSaldoResidual',False)
         extrairVencimento = kwargs.get('extrairVencimento', False)
         extrairCustoDisponibilidade = kwargs.get('extrairCustoDisponibilidade',
                                                  False)
@@ -297,6 +304,7 @@ class Faturamento(models.Model):
         self.energia_da_concessionaria = extrairCustoDisponibilidade(
             conta_txt)[1]
         self.referencia= extrairReferencia(conta_txt)
+        self.acerto=extrairSaldoResidual(conta_txt)
         self.tarifa = extrairCustoDisponibilidade(conta_txt)[2]
         self.vencimento = extrairVencimento(conta_txt)
         self.iluminacaoPublica = obterIluminacaoPublica(conta_txt)
@@ -322,7 +330,6 @@ class Faturamento(models.Model):
         Saída: nenhuma
         ----------
         Atributos atualizados pelo método:
-        economia_percentual
         economia_valor
         franquia
         tarifa
@@ -337,11 +344,6 @@ class Faturamento(models.Model):
         #bonus e desconto do objeto cliente.
         if (self.tarifaInjetada==None or self.tarifaInjetada==''):
             self.baixarDadosCliente()
-        print ('Vamos ver como está a fatura:')
-        print (self.consumo_mes)
-        print (self.injetada)
-        
-
 
         self.franquia = self.consumo_mes - self.injetada
 
@@ -350,11 +352,11 @@ class Faturamento(models.Model):
         
 
         #Valor que será cobrado do cliente pela energia injetada
-        self.valorInjetado = self.tarifaInjetada * self.injetada
+        self.valorInjetado = round (self.tarifaInjetada * self.injetada,2)
 
         #Valor que o cliente deve repassar ao fornecedor de energia, considerando que o fornecedor
         #é responsável por pagar a fatura da concessionária
-        self.totalPagar = self.iluminacaoPublica + self.custo_disponibilidade + self.valorInjetado - self.bonus
+        self.totalPagar = self.iluminacaoPublica + self.custo_disponibilidade + self.valorInjetado - self.bonus + self.acerto
 
     def calcularFaturaSemEnergiaFotovoltaica(self, *args, **kwargs):
         '''
@@ -380,7 +382,7 @@ class Faturamento(models.Model):
                 porte]:
             self.valorConsumoSimulado = 0
         else:
-            self.valorConsumoSimulado = float(self.consumo_mes) * self.tarifa
+            self.valorConsumoSimulado = round(float(self.consumo_mes) * self.tarifa,2)
             self.custo_disponibilidade_simulado=0
  
 
@@ -390,7 +392,7 @@ class Faturamento(models.Model):
                 self.
                 porte] else self.valorConsumoSimulado  #Caso o consumo seja menor que a franquia, colocar a franquia como consumo simulado
         '''
-        self.totalSimulado = self.valorConsumoSimulado + self.custo_disponibilidade_simulado+ self.iluminacaoPublica
+        self.totalSimulado = round(self.valorConsumoSimulado + self.custo_disponibilidade_simulado+ self.iluminacaoPublica,2)
         
     def calculaEconomia(self, *args, **kwargs):
         '''
@@ -409,8 +411,8 @@ class Faturamento(models.Model):
 
         '''
 
-        self.economia_valor=self.totalSimulado-self.totalPagar
-        self.economia_percentual=100*self.economia_valor/self.totalSimulado
+        self.economia_valor=self.totalSimulado-self.totalPagar+self.acerto
+        self.economia_percentual=round(100*self.economia_valor/self.totalSimulado,2)
 
     def imprimir_pdf(self):
         print (self.conta_pdf)

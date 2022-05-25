@@ -15,6 +15,12 @@
               {{ cliente.nome }}
             </option>
           </select>
+          <br>
+          <label>Distribuidora</label>
+          <select required v-model="distribuidora">
+            <option value="cemig">Cemig</option>
+            <option value="enel">Enel</option>
+          </select>
           <br><br>
           <input required type="file"
             id="nova_fatura" name="nova_fatura"
