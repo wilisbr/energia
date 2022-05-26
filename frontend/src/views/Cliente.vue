@@ -8,9 +8,9 @@
         <tbody>
           <tr> <td>CPF do Cliente</td> <td> <input v-model="cliente.cpf_cliente" required type="number" max="99999999999" style="width: 11em" size="11"></td></tr>
           <tr> <td>Nome da Instalação</td> <td> <input v-model="cliente.nome" required type="text" max="40"> </td></tr>
-          <tr> <td>Endereço</td> <td> <input v-model="cliente.endereco" type="text" max="84"> </td></tr>
-          <tr> <td>E-mail</td> <td> <input v-model="cliente.email" type="email" > </td></tr>
-          <tr> <td>Telefone</td> <td> <input v-model="cliente.telefone" type="text" size="13" max="15"> </td></tr>
+          <tr> <td>Endereço</td> <td> <input v-model="cliente.endereco" required type="text" max="84"> </td></tr>
+          <tr> <td>E-mail</td> <td> <input v-model="cliente.email" required type="email" > </td></tr>
+          <tr> <td>Telefone</td> <td> <input v-model="cliente.telefone" required type="text" size="13" max="15"> </td></tr>
           <tr> <td>Desconto</td> <td> <input v-model="cliente.desconto" required type="number" min="0" max="100" step="1" size="3">%</td></tr>
           <tr> <td>Bônus</td> <td> R$ <input v-model="cliente.bonus" required type="number" min="0"  step="0.01"></td></tr>
         </tbody>
@@ -31,7 +31,7 @@ export default {
   name: 'Clientes',
   data() {
     return {
-      cliente: {},
+      cliente: {desconto:20,bonus:0},
       errors: [],
       id:this.$route.params.id,
     }

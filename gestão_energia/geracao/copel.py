@@ -224,21 +224,21 @@ def extrairCustoDisponibilidade(pag1: str) -> float:
     ----------
 
     '''
-    texto_energia_concessionaria_consumo=extrairExpressaoRegular(r'ENERGIA ELET CONSUMO kWh\s\S+\s\S+\s\S+',pag1)[0]
+    texto_energia_concessionaria_consumo=extrairExpressaoRegular(r'CONSUMO kWh\s\S+\s\S+\s\S+',pag1)[0]
     if (texto_energia_concessionaria_consumo=='none'):
         valor_consumo=0
         quantidade_consumo=0
     else:
-        texto_energia_concessionaria_consumo=texto_energia_concessionaria_consumo.replace("ENERGIA ELET CONSUMO kWh", "")
+        texto_energia_concessionaria_consumo=texto_energia_concessionaria_consumo.replace("CONSUMO kWh", "")
         texto_energia_concessionaria_consumo=texto_energia_concessionaria_consumo.split()
         valor_consumo=float(texto_energia_concessionaria_consumo[2].replace(',', '.'))
         quantidade_consumo=float(texto_energia_concessionaria_consumo[0])
     
-    texto_uso_sistema=extrairExpressaoRegular(r'ENERGIA ELET USO SISTEMA kWh\s\S+\s\S+\s\S+',pag1)[0]
+    texto_uso_sistema=extrairExpressaoRegular(r'USO SISTEMA kWh\s\S+\s\S+\s\S+',pag1)[0]
     if (texto_uso_sistema=='none'):
         valor_uso_sistema=0
     else:
-        texto_uso_sistema=texto_uso_sistema.replace("ENERGIA ELET USO SISTEMA kWh", "")
+        texto_uso_sistema=texto_uso_sistema.replace("USO SISTEMA kWh", "")
         texto_uso_sistema=texto_uso_sistema.split()
         valor_uso_sistema=float(texto_uso_sistema[2].replace(',', '.'))
     
@@ -255,7 +255,6 @@ def extrairCustoDisponibilidade(pag1: str) -> float:
     texto_bandeira=extrairExpressaoRegular(r'ESCASSEZ HID kWh\s\S+',pag1)[0]
     texto_bandeira=texto_bandeira.replace('ESCASSEZ HID kWh ','')
     bandeira=0 if texto_bandeira == 'none' else float(texto_bandeira.replace(',', '.'))
-
     '''
     texto_subsidio_te=extrairExpressaoRegular(r'SUBSIDIO TARIFARIO TE\s\S+',pag1)[0]
     texto_subsidio_te=texto_subsidio_te.replace('SUBSIDIO TARIFARIO TE ','')

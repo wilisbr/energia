@@ -267,7 +267,7 @@ class TesteFaturamento(TestCase):
         self.assertEqual(self.faturamentoRosi.totalSimulado, 725.58)
         self.assertEqual(self.faturamentoUrbanoCopel.totalSimulado, 1020.69)
         self.assertEqual(self.faturamentoRuralCopelSemInjetada.totalSimulado, 67.38)
-        self.assertEqual(self.faturamentoRuralCopelComInjetada.totalSimulado, 493.09)
+        self.assertEqual(self.faturamentoRuralCopelComInjetada.totalSimulado, 432.14)
 
     def test_instalacao(self):
         self.assertEqual(self.faturamentoGoitacazesAbril.instalacao,

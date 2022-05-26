@@ -294,7 +294,6 @@ class Faturamento(models.Model):
         self.bonus = kwargs.get('bonus', self.bonus)
         
         conta_txt = pdf2txt(self.conta_pdf.path, 0)
-        #print (conta_txt)
         self.porte = extrairPorte(conta_txt)
 
         self.injetada = extrairEnergiaInjetada(conta_txt)
@@ -392,7 +391,7 @@ class Faturamento(models.Model):
                 self.
                 porte] else self.valorConsumoSimulado  #Caso o consumo seja menor que a franquia, colocar a franquia como consumo simulado
         '''
-        self.totalSimulado = round(self.valorConsumoSimulado + self.custo_disponibilidade_simulado+ self.iluminacaoPublica,2)
+        self.totalSimulado = round(self.valorConsumoSimulado + self.custo_disponibilidade_simulado+ self.iluminacaoPublica+ self.acerto,2)
         
     def calculaEconomia(self, *args, **kwargs):
         '''
@@ -411,8 +410,8 @@ class Faturamento(models.Model):
 
         '''
 
-        self.economia_valor=self.totalSimulado-self.totalPagar+self.acerto
-        self.economia_percentual=round(100*self.economia_valor/self.totalSimulado,2)
+        self.economia_valor=(self.totalSimulado)-(self.totalPagar)
+        self.economia_percentual=round(100*self.economia_valor/(self.totalSimulado-self.acerto),2)
 
     def imprimir_pdf(self):
         print (self.conta_pdf)
@@ -474,6 +473,8 @@ class Faturamento(models.Model):
         c.drawRightString(250,195,"R$ "+str(self.iluminacaoPublica))
         c.drawRightString(145,210,"Custo de disponibilidade:")
         c.drawRightString(250,210,"R$ "+str(self.custo_disponibilidade_simulado))
+        c.drawRightString(132,225,"Acerto conta anterior:")
+        c.drawRightString(250,225,"R$ "+str(self.acerto))
         c.drawRightString(115,300,"Total da Conta:")
         c.drawRightString(250,300,"R$ {:.2f}".format(self.totalSimulado))
 
@@ -502,6 +503,8 @@ class Faturamento(models.Model):
         c.drawRightString(520,210,"R$ "+"{:.2f}".format(self.custo_disponibilidade))
         c.drawRightString(318,225,"Bônus:")
         c.drawRightString(520,225,"-R$ {:.2f}".format(self.bonus))
+        c.drawRightString(383,240,"Acerto conta anterior:")
+        c.drawRightString(520,240,"R$ "+str(self.acerto))
         c.drawRightString(335,300,"Economia:")
         c.drawRightString(393,300,"{:.2f}".format(self.economia_percentual) + "%")
         c.drawRightString(520,300,"R$ {:.2f}".format(self.economia_valor))

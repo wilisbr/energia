@@ -5,7 +5,7 @@
       geração distribuída e trasfere o excedente para outras instalações, recebendo, 
       em contrapartida, uma compensação financeira. O objetivo do sistema é automatizar todo o cálculo e a geração da cobrança 
       para o seu cliente. O sistema torna tudo muito simples e rápido, de modo que você configura poucos parâmetros (ex: % de desconto) e 
-      faz o upload da conta de luz no formato PDF (o arquivo deverá ser baixado do site da CEMIG). Com poucos segundos 
+      faz o upload da conta de luz no formato PDF (o arquivo deverá ser baixado dos sites da CEMIG e COPEL). Com poucos segundos 
       você terá em mãos um documento explicando ao seu cliente o quanto ele economizou e quanto dele deverá te pagar.</p>
       
 
@@ -22,7 +22,7 @@
       <h3>2) Fazendo upload das contas </h3>
       <p> Após incluir a instalação do seu cliente, acesso a opção <strong>Faturas</strong> no menu superior, 
       escolha a instalação desejada e faça o upload da fatura. Importante ressaltar que o sistema só vai 
-      reconhecer faturas baixadas <strong>diretamente do site da Cemig</strong>, no formato PDF. Estamos 
+      reconhecer faturas baixadas <strong>diretamente dos sites da Cemig e Copel </strong>, no formato PDF. Estamos 
       trabalhando para adicionar outras concessionárias. A próxima a ser incluída será a Enel</p>
 
       <h3>3) Geração da cobrança</h3>

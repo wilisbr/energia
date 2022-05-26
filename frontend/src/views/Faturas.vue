@@ -15,11 +15,12 @@
               {{ cliente.nome }}
             </option>
           </select>
+          <router-link to="/clientes">Criar Instalação</router-link>
           <br>
           <label>Distribuidora</label>
           <select required v-model="distribuidora">
             <option value="cemig">Cemig</option>
-            <option value="enel">Enel</option>
+            <option value="copel">Copel</option>
           </select>
           <br><br>
           <input required type="file"
@@ -63,6 +64,7 @@ export default {
   name: 'Faturas',
   data() {
     return {
+      distribuidora: Text,
       faturas : [],
       clientes: [],
       errors: [],
@@ -120,6 +122,7 @@ export default {
       let formData = new FormData();
       if (this.conta_pdf){
         formData.append('conta_pdf', this.conta_pdf);
+        formData.append('distribuidora', this.distribuidora)
       }
       axios.defaults.headers.put['Content-Type']='application/json' 
       await axios
@@ -130,7 +133,8 @@ export default {
         .catch(error => {
             if (error.response) {
                 for (const property in error.response.data) {
-                    this.errors.push(`${property}: ${error.response.data[property]}`)
+                    //this.errors.push(`${property}: ${error.response.data[property]}`)
+                    console.log(error)
                 }
             } else {
                 this.errors.push('Something went wrong. Please try again')
@@ -141,6 +145,7 @@ export default {
       
     },
     carregarConta: async function (e){
+      
       let formData = new FormData();
       formData.append('id', this.fatura.id);
       await axios
@@ -150,35 +155,41 @@ export default {
         })
         .catch(error => {
             if (error.response) {
+                console.log(error)
                 for (const property in error.response.data) {
                     this.errors.push(`${property}: ${error.response.data[property]}`)
-                }
+                 }
             } else {
                 this.errors.push('Something went wrong. Please try again')
                 console.log(JSON.stringify(error))
             }
+            this.apagar(this.fatura)
         })
     },
     async nova_fatura(){
-      if (!this.errors.length) {
-        this.$store.commit('setIsLoading', true)
-        this.fatura={cpf_cliente: this.id_cliente}
-        await axios
-          .post ("/api/v1/faturamentos/",this.fatura)
-          .then(response => {
-            this.fatura=response.data
-          })
-          .catch(error => {
-              if (error.response.status === 401) {
-                  console.log('Ticket expirado. Necessário novo login')
-                  this.logout()
-              }
-              console.log(error)
-            })
-        await this.upload_fatura()
-        await this.getFaturamentos()
-        this.$store.commit('setIsLoading', false)
+      this.errors=[]
+      this.$store.commit('setIsLoading', true)
+      this.fatura={
+        cpf_cliente: this.id_cliente,
+        distribuidora: this.distribuidora
       }
+      console.log(this.fatura)
+      await axios
+        .post ("/api/v1/faturamentos/",this.fatura)
+        .then(response => {
+          this.fatura=response.data
+        })
+        .catch(error => {
+            if (error.response.status === 401) {
+                console.log('Ticket expirado. Necessário novo login')
+                this.logout()
+            }
+            console.log(error)
+          })
+      await this.upload_fatura()
+      await this.getFaturamentos()
+      this.$store.commit('setIsLoading', false)
+
     },
     async apagar(fatura){
       this.$store.commit('setIsLoading', true)

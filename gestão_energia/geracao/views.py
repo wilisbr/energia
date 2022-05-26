@@ -1,3 +1,4 @@
+from cmath import e
 from django.shortcuts import render
 from django.http import FileResponse, Http404
 from rest_framework.viewsets import ModelViewSet
@@ -5,10 +6,12 @@ from django.contrib.auth.decorators import login_required
 from rest_framework import permissions
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from rest_framework import status
 
 from geracao.models import *
 from geracao.serializers import *
 import cemig
+import copel
 
 # Create your views here.
 class FaturamentosViewSet (ModelViewSet):
@@ -65,16 +68,35 @@ def carregarConta(request):
     id=request.data['id']
     print (id)
     faturamento = Faturamento.objects.filter(id__exact=id)[0]
-    faturamento.carregarConta(pdf2txt=cemig.pdf2txt,
-            extrairPorte=cemig.extrairPorte,
-            extrairHistoricoConsumo=cemig.extrairHistoricoConsumo,
-            extrairEnergiaInjetada=cemig.extrairEnergiaInjetada,
-            extrairCustoDisponibilidade=cemig.extrairCustoDisponibilidade,
-            obterIluminacaoPublica=cemig.obterIluminacaoPublica,
-            extrairNumeroInstalacao=cemig.extrairNumeroInstalacao,
-            extrairReferencia=cemig.extrairReferencia,
-            extrairVencimento=cemig.extrairVencimento)
-    faturamento.save()
+    try:
+        if (faturamento.distribuidora == 'cemig'):
+            faturamento.carregarConta(pdf2txt=cemig.pdf2txt,
+                    extrairPorte=cemig.extrairPorte,
+                    extrairHistoricoConsumo=cemig.extrairHistoricoConsumo,
+                    extrairEnergiaInjetada=cemig.extrairEnergiaInjetada,
+                    extrairCustoDisponibilidade=cemig.extrairCustoDisponibilidade,
+                    obterIluminacaoPublica=cemig.obterIluminacaoPublica,
+                    extrairNumeroInstalacao=cemig.extrairNumeroInstalacao,
+                    extrairReferencia=cemig.extrairReferencia,
+                    extrairVencimento=cemig.extrairVencimento,
+                    extrairSaldoResidual=cemig.extrairSaldoResidual)
+        elif (faturamento.distribuidora=='copel'):
+            faturamento.carregarConta(pdf2txt=copel.pdf2txt,
+                    extrairPorte=copel.extrairPorte,
+                    extrairHistoricoConsumo=copel.extrairHistoricoConsumo,
+                    extrairEnergiaInjetada=copel.extrairEnergiaInjetada,
+                    extrairCustoDisponibilidade=copel.extrairCustoDisponibilidade,
+                    obterIluminacaoPublica=copel.obterIluminacaoPublica,
+                    extrairNumeroInstalacao=copel.extrairNumeroInstalacao,
+                    extrairReferencia=copel.extrairReferencia,
+                    extrairVencimento=copel.extrairVencimento,
+                    extrairSaldoResidual=copel.extrairSaldoResidual)
+        faturamento.save()
+    except:
+        print ("erro!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1")
+        return Response({'Erro': 'Houve um problema ao carregar a conta. Certifique-se de que escolheu corretamente a distribuidora ou entre em contato com o desenvolvedor cwgestao@aol.com.'},
+                 status=status.HTTP_400_BAD_REQUEST)
+
     print (faturamento.totalPagar)
     serializer =  FaturamentoSerializer(faturamento, many=False)
     return Response(serializer.data)

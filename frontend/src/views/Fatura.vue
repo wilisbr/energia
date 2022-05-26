@@ -22,7 +22,6 @@
         </table>
         </form>
         <iframe :key="id_iFrameCobrancaPDF" :src="`${baseURL}/api/v1/getFaturaPdf?id=${id}`" width="100%" height="700px"></iframe>
-        <p> {{baseURL}} </p>
     </div>
 </template>
 
@@ -78,6 +77,7 @@ export default {
               if (error.response) {
                   for (const property in error.response.data) {
                       this.errors.push(`${property}: ${error.response.data[property]}`)
+                      console.log(JSON.stringify(error))
                   }
               } else {
                   this.errors.push('Something went wrong. Please try again')
