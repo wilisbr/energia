@@ -511,6 +511,8 @@ class Faturamento(models.Model):
         c.drawRightString(350,320,"Total a pagar:")
         c.drawRightString(520,320,"R$ {:.2f}".format(self.totalPagar))
         c.roundRect(470, 305,60,20,3,stroke=1,fill=0)
+        c.drawRightString(520,340,"A fatura da concessionária será paga por nós.")
+        c.drawRightString(445,355,"Não pague em duplicidade.!")
 
         c.showPage()
         # Saving the PDF
