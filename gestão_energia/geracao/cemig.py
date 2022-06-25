@@ -56,6 +56,7 @@ def pdf2txt(arquivo: str, pagina: int) -> str:
 
     #Extraindo o texto, primeira página
     pag1 = fileReader.getPage(pagina).extractText()
+    print (pag1)
     return (pag1)
 
 def extrairReferencia(pag1: str) -> str:
@@ -266,8 +267,13 @@ def extrairSaldoResidual(pag1: str) -> float:
     ----------
 
     '''
-    saldo_residual=0
+    saldo_residual=10
+    textos_creditos_e_debitos = extrairExpressaoRegular(r'Cobrança da Conta de Energia de.*\d+,\d+Tarifas',
+                                                pag1)[0]
+    if (textos_creditos_e_debitos!='none'):
+        saldo_residual=extrairExpressaoRegular(r'\d+,\d+',textos_creditos_e_debitos)[0]
     return saldo_residual
+
 
 def gerarContaComFotovotaica(pdf_conta: str, desconto=0.2, bonus=0) -> float:
     '''
