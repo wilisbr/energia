@@ -414,7 +414,7 @@ class Faturamento(models.Model):
         self.economia_percentual=round(100*self.economia_valor/(self.totalSimulado-self.acerto),2)
 
     def imprimir_pdf(self):
-        print (self.conta_pdf)
+        #print (self.conta_pdf)
         # Creating Canvas
         c = canvas.Canvas("invoice.pdf",pagesize=pagesizes.A4,bottomup=0)
         # Logo Section
@@ -550,9 +550,9 @@ class Faturamento(models.Model):
         self.save()
     
     def save(self, *args, **kwargs):
-        print ('Salvando e alterando o objeto Faturamento no save()')
+        #print ('Salvando e alterando o objeto Faturamento no save()')
         super().save(*args, **kwargs) #Tem que salvar antes, para gravar o arquivo pdf que foi modificado
-        print ('salvei e saí do save()')
+        #print ('salvei e saí do save()')
         '''print(self.conta_pdf)
         self.carregarConta(      
             pdf2txt=cemig.pdf2txt,
