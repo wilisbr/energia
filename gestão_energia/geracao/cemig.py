@@ -22,6 +22,7 @@ def extrairExpressaoRegular(expr: str, texto: str) -> []:
     for indice, ocorrencia in enumerate(ocorrencias):
 
         try:
+            ocorrencia=ocorrencia.replace('.','')
             ocorrencias[indice] = float(ocorrencia.replace(',', '.'))
             #print("converti o valor " + str(ocorrencia) + " para float")
         except ValueError:
@@ -133,10 +134,10 @@ def extrairHistoricoConsumo(pag1: str) -> []:
     ----------
 
     '''
-    consumos_mensais = extrairExpressaoRegular(r'[A-Z]{3}\/[0-9]{2}\s+\d+',
+    consumos_mensais = extrairExpressaoRegular(r'[A-Z]{3}\/[0-9]{2}\s+\d+[\.]?[\d]*',
                                                pag1)
     consumos_mensais = [
-        extrairExpressaoRegular(r'\d+$', x)[0] for x in consumos_mensais
+        extrairExpressaoRegular(r'\d+[\.]?\d+$', x)[0] for x in consumos_mensais
     ]
     return (consumos_mensais)
 
@@ -156,12 +157,12 @@ def extrairEnergiaInjetada(pag1: str) -> float:
     ----------
 
     '''
-    injetada = extrairExpressaoRegular(r'Energia injetada\D+\d+', pag1)[0]
+    injetada = extrairExpressaoRegular(r'Energia injetada\D+\d+[\.]?\d+', pag1)[0]
     
     if injetada=='none':
         return 0
     
-    injetada = extrairExpressaoRegular(r'\d+', injetada)[0]
+    injetada = extrairExpressaoRegular(r'\d[\.]?\d+', injetada)[0]
     return (injetada)
 
 
