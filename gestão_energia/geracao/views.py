@@ -22,7 +22,8 @@ class FaturamentosViewSet (ModelViewSet):
     def get_queryset(self):
         user = self.request.user
         print (user)
-        return Faturamento.objects.filter(usuario__exact=str(self.request.user))
+        faturamentos = Faturamento.objects.filter(usuario__exact=str(self.request.user)).order_by('-id')
+        return faturamentos
     def get_permissions(self):
         if self.action == 'list':
             self.permission_classes = [IsSuperUser, ]

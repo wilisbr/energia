@@ -77,10 +77,11 @@ export default {
 
   },
   
-  mounted(){
+  async mounted(){
     this.$store.commit('setIsLoading', true)
-    this.getFaturamentos()
-    this.getClientes()
+    await this.getClientes()
+    await this.getFaturamentos()
+    
     this.$store.commit('setIsLoading', false)
   },
   methods:{
@@ -223,17 +224,12 @@ export default {
           })    
 
       // Vamos baixar o nome dos clientes:
+      console.log (this.clientes)
       for(let i = 0; i < this.faturas.length; i = i + 1 ) {
-        await axios
-        .get ("/api/v1/clientes/"+this.faturas[i].cpf_cliente+"/")
-        .then(response => {
-        this.faturas[i].nome_cliente=response.data.nome
-        
-        })
-        .catch(error => {
-            console.log('Cliente não encontrado')
-          })    
+        var result = this.clientes.find(cliente => cliente.id === this.faturas[i].cpf_cliente);
+        this.faturas[i].nome_cliente=result.nome
       }
+      
     },
   }
 
