@@ -174,7 +174,6 @@ export default {
         cpf_cliente: this.id_cliente,
         distribuidora: this.distribuidora
       }
-      console.log(this.fatura)
       await axios
         .post ("/api/v1/faturamentos/",this.fatura)
         .then(response => {
@@ -224,7 +223,6 @@ export default {
           })    
 
       // Vamos baixar o nome dos clientes:
-      console.log (this.clientes)
       for(let i = 0; i < this.faturas.length; i = i + 1 ) {
         var result = this.clientes.find(cliente => cliente.id === this.faturas[i].cpf_cliente);
         this.faturas[i].nome_cliente=result.nome

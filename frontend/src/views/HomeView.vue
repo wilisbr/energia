@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="content is-normal has-text-justified" >
-      <p> Este sistema, de uso gratuiro, possbilita uma gestão <strong>eficiente</strong> para quem possui sistema de 
+      <p> Este sistema, de uso gratuito, possbilita uma gestão <strong>eficiente</strong> para quem possui sistema de 
       geração distribuída e trasfere o excedente para outras instalações, recebendo, 
       em contrapartida, uma compensação financeira. O objetivo do sistema é automatizar todo o cálculo e a geração da cobrança 
       para o seu cliente. O sistema torna tudo muito simples e rápido, de modo que você configura poucos parâmetros (ex: % de desconto) e 
@@ -28,10 +28,6 @@
       <h3>3) Geração da cobrança</h3>
       <p>Escolha uma das faturas que foram incluídas e clique na opção <strong>Faturar</strong>. Faça o download
       e envie para seu cliente!</p>
-
-      Caso você precise fazer uma gestão completa, incluindo prospecção de clientes, relacionamento e cobrança, entre
-      em contato para firmarmos uma paceria <strong>(cwgestao@aol.com).</strong> Caso você opte por fazer todo o trabalho, 
-      sinta-se livre para utilizar este sistema de forma <strong>gratuita.</strong>
 
     </div>
   </div>
