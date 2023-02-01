@@ -58,6 +58,7 @@ def pdf2txt(arquivo: str, pagina: int) -> str:
     #Extraindo o texto, primeira página
     pag1 = fileReader.getPage(pagina).extractText()
     #print (pag1)
+    #print ('--------' )
     return (pag1)
 
 def extrairReferencia(pag1: str) -> str:
@@ -74,7 +75,6 @@ def extrairReferencia(pag1: str) -> str:
     str contendo MMM/AAAA (ex: ABR/2022)
     ----------
     '''
-    texto_contendo_referencia=extrairExpressaoRegular(r'\)[A-Z]{3}\/[\d]{4}', pag1)[0]
     referencia=extrairExpressaoRegular(r'[A-Z]{3}\/[\d]{4}', pag1)[0]
     return (referencia)
 
@@ -113,7 +113,7 @@ def extrairPorte(pag1: str) -> str:
     ----------
 
     '''
-    p = re.compile("[a-zA-Z]*fásico")
+    p = re.compile("(?:Bifásico|Trifásico|Monofásico)")
     porte = p.findall(pag1)
     porte = porte[0] if porte else "indeterminado"
     return (porte)
@@ -157,7 +157,7 @@ def extrairEnergiaInjetada(pag1: str) -> float:
     ----------
 
     '''
-    injetada = extrairExpressaoRegular(r'Energia injetada\D+\d+[\.]?\d+', pag1)[0]
+    injetada = extrairExpressaoRegular(r'Energia injetada HFPkWh[0-9 ,.]+', pag1)[0]
     
     if injetada=='none':
         return 0
@@ -181,7 +181,7 @@ def extrairNumeroInstalacao(pag1: str) -> int:
     '''
 
     frase_contendo_numeros_instalacao_e_cliente = extrairExpressaoRegular(
-        r'[0-9]{10}Referente', pag1)[0]
+        r'[0-9]{10}\s+Referente', pag1)[0]
     numero_instalacao = int (extrairExpressaoRegular(
         r'[0-9]+', frase_contendo_numeros_instalacao_e_cliente)[0]) 
     #int(frase_contendo_numeros_instalacao_e_cliente[0:10])
@@ -191,7 +191,7 @@ def extrairNumeroInstalacao(pag1: str) -> int:
 
 def extrairCustoDisponibilidade(pag1: str) -> float:
     '''
-    Retorna o custo de indisponibildiade cobrado na fatura.
+    Retorna o custo de disponibildiade cobrado na fatura.
     Esse custo de disponibilidade pode gerar ou não créditos na fatura.
     Quando o período de leitura é menor que 30 dias, a Cemig não gera créditos.
 
@@ -207,25 +207,16 @@ def extrairCustoDisponibilidade(pag1: str) -> float:
     ----------
 
     '''
-    #Quando não são gerados créditos:
-    custo_disponibilidade = extrairExpressaoRegular(
-        r'Custo de Disponibilidade\s*[0-9]+,[0-9]+', pag1)[0]
+
+    linha_consumo_concessionaria = extrairExpressaoRegular(
+        r'Energia ElétricakWh[0-9 ,]+', pag1)[0]
     valor_energia_concessionaria = extrairExpressaoRegular(
-        '[0-9]+,[0-9]+', custo_disponibilidade)[0]
-    quantidade_kwh_concessionaria = 0  #nao houve creditos
-    tarifa_energia_concessionaria = np.NaN
+        '[0-9]+,[0-9]+', linha_consumo_concessionaria)[1]
+    quantidade_kwh_concessionaria = extrairExpressaoRegular(
+        '[0-9]+', linha_consumo_concessionaria)[0]  #nao houve creditos
+    tarifa_energia_concessionaria = extrairExpressaoRegular(
+        '[0-9]+,[0-9]+', linha_consumo_concessionaria)[0]
 
-    #Quando SÃO gerados créditos relacionados ao custo de disponibilidade ou ao consumo que nao foi suprido pela energia injetada
-    if (custo_disponibilidade == 'none'):
-
-        fornecimento_concessionaria = extrairExpressaoRegular(
-            r'Energia Elétrica kWh\s+\d+\s+\d+,\d+\s+\d+,\d+', pag1)[0]
-        valor_energia_concessionaria = extrairExpressaoRegular(
-            '[0-9]+,[0-9]+', fornecimento_concessionaria)[1]
-        tarifa_energia_concessionaria = extrairExpressaoRegular(
-            '[0-9]+,[0-9]+', fornecimento_concessionaria)[0]
-        quantidade_kwh_concessionaria = extrairExpressaoRegular(
-            '[0-9]+', fornecimento_concessionaria)[0]
     return ((valor_energia_concessionaria, quantidade_kwh_concessionaria,
              tarifa_energia_concessionaria))
 
@@ -263,7 +254,7 @@ def extrairSaldoResidual(pag1: str) -> float:
 
     Saída:
     ----------
-    float contendo o valor creditado na conta de luz pela iluminação pública.
+    float contendo o valor creditado na conta de luz.
     Se o valor for negativo, havia um valor devido que foi descontado nessa fatura.
     ----------
 

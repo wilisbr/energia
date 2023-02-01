@@ -10,8 +10,7 @@ from rest_framework import status
 
 from geracao.models import *
 from geracao.serializers import *
-import cemig
-import copel
+import cemig, cemig2, copel
 
 # Create your views here.
 class FaturamentosViewSet (ModelViewSet):
@@ -92,6 +91,17 @@ def carregarConta(request):
                     extrairReferencia=copel.extrairReferencia,
                     extrairVencimento=copel.extrairVencimento,
                     extrairSaldoResidual=copel.extrairSaldoResidual)
+        elif (faturamento.distribuidora=='cemig2'):
+            faturamento.carregarConta(pdf2txt=cemig2.pdf2txt,
+                    extrairPorte=cemig2.extrairPorte,
+                    extrairHistoricoConsumo=cemig2.extrairHistoricoConsumo,
+                    extrairEnergiaInjetada=cemig2.extrairEnergiaInjetada,
+                    extrairCustoDisponibilidade=cemig2.extrairCustoDisponibilidade,
+                    obterIluminacaoPublica=cemig2.obterIluminacaoPublica,
+                    extrairNumeroInstalacao=cemig2.extrairNumeroInstalacao,
+                    extrairReferencia=cemig2.extrairReferencia,
+                    extrairVencimento=cemig2.extrairVencimento,
+                    extrairSaldoResidual=cemig2.extrairSaldoResidual)
         faturamento.save()
     except:
         print ("erro!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1")

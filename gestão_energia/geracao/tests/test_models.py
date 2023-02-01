@@ -10,8 +10,7 @@ currentdir = os.path.dirname(
     os.path.abspath(inspect.getfile(inspect.currentframe())))
 parentdir = os.path.dirname(currentdir)
 sys.path.insert(0, parentdir)
-import cemig
-import copel
+import cemig, cemig2, copel
 
 
 # Create your tests here.
@@ -35,8 +34,40 @@ class TesteFaturamento(TestCase):
         self.faturamentoUrbanoCopel = Faturamento()
         self.faturamentoRuralCopelSemInjetada = Faturamento()
         self.faturamentoRuralCopelComInjetada = Faturamento()
+        self.faturamentoCemigBitencaNovo= Faturamento()
+        self.faturamentoCemigEstovaNovo= Faturamento()
 
-        #Carregando as contas
+        #Carregando as contas 
+        self.faturamentoCemigBitencaNovo.carregarConta(
+            conta_pdf='geracao/tests/fatura_nova_bitenca.pdf',
+            pdf2txt=cemig2.pdf2txt,
+            extrairPorte=cemig2.extrairPorte,
+            extrairHistoricoConsumo=cemig2.extrairHistoricoConsumo,
+            extrairEnergiaInjetada=cemig2.extrairEnergiaInjetada,
+            extrairCustoDisponibilidade=cemig2.extrairCustoDisponibilidade,
+            obterIluminacaoPublica=cemig2.obterIluminacaoPublica,
+            extrairNumeroInstalacao=cemig2.extrairNumeroInstalacao,
+            extrairReferencia=cemig2.extrairReferencia,
+            extrairVencimento=cemig2.extrairVencimento,
+            extrairSaldoResidual=cemig2.extrairSaldoResidual,
+            desconto=20,
+            bonus=30)
+        
+        self.faturamentoCemigEstovaNovo.carregarConta(
+            conta_pdf='geracao/tests/FaturaCEMIG_11022023.pdf',
+            pdf2txt=cemig2.pdf2txt,
+            extrairPorte=cemig2.extrairPorte,
+            extrairHistoricoConsumo=cemig2.extrairHistoricoConsumo,
+            extrairEnergiaInjetada=cemig2.extrairEnergiaInjetada,
+            extrairCustoDisponibilidade=cemig2.extrairCustoDisponibilidade,
+            obterIluminacaoPublica=cemig2.obterIluminacaoPublica,
+            extrairNumeroInstalacao=cemig2.extrairNumeroInstalacao,
+            extrairReferencia=cemig2.extrairReferencia,
+            extrairVencimento=cemig2.extrairVencimento,
+            extrairSaldoResidual=cemig2.extrairSaldoResidual,
+            desconto=20,
+            bonus=30)
+
         self.faturamentoGoitacazesAbril.carregarConta(
             conta_pdf='geracao/tests/noname.pdf',
             pdf2txt=cemig.pdf2txt,
@@ -156,12 +187,6 @@ class TesteFaturamento(TestCase):
         #print("setUp: Run once for every test method to setup clean data.")
         pass
 
-    def test_extrairInstalacao(self):        
-        self.assertEqual(self.faturamentoGoitacazesAbril.porte, 'Monofásico')
-        self.assertEqual(self.faturamentoCharlesAbril.porte, 'Bifásico')
-        self.assertEqual(self.faturamentoRJAbril.porte, 'Trifásico')
-        self.assertEqual(self.faturamentoEstovadaoAbril.porte, 'Trifásico')
-        self.assertEqual(self.faturamentoRosi.porte, 'Bifásico')
 
     def test_extrairPorte(self):
         #print("Testando método extrairPorte()")
@@ -173,6 +198,7 @@ class TesteFaturamento(TestCase):
         self.assertEqual(self.faturamentoUrbanoCopel.porte, 'Trifásico')
         self.assertEqual(self.faturamentoRuralCopelSemInjetada.porte, 'Trifásico')
         self.assertEqual(self.faturamentoRuralCopelComInjetada.porte, 'Trifásico')
+        self.assertEqual(self.faturamentoCemigBitencaNovo.porte, 'Bifásico')
 
     def test_extrairHistoricoConsumo(self):
         #print("Testando método extrairHistoricoConsumo()")
@@ -184,6 +210,7 @@ class TesteFaturamento(TestCase):
         self.assertEqual(self.faturamentoUrbanoCopel.consumo_mes, 939)
         self.assertEqual(self.faturamentoRuralCopelSemInjetada.consumo_mes, 0)
         self.assertEqual(self.faturamentoRuralCopelComInjetada.consumo_mes, 809)
+        self.assertEqual(self.faturamentoCemigBitencaNovo.consumo_mes, 1136)
 
     def test_extrairEnergiaInjetada(self):
         #print("Testando método extrairEnergiaInjetada()")
@@ -195,6 +222,7 @@ class TesteFaturamento(TestCase):
         self.assertEqual(self.faturamentoUrbanoCopel.injetada, 839)
         self.assertEqual(self.faturamentoRuralCopelSemInjetada.injetada, 0)
         self.assertEqual(self.faturamentoRuralCopelComInjetada.injetada, 709)
+        self.assertEqual(self.faturamentoCemigBitencaNovo.injetada, 1086)
 
     def test_custo_disponibilidade(self):
         #print("Testando método custo_disponibilidade()")
@@ -209,6 +237,7 @@ class TesteFaturamento(TestCase):
         self.assertEqual(self.faturamentoUrbanoCopel.custo_disponibilidade, 104.25)
         self.assertEqual(self.faturamentoRuralCopelSemInjetada.custo_disponibilidade, 67.38)
         self.assertEqual(self.faturamentoRuralCopelComInjetada.custo_disponibilidade, 60.95)
+        self.assertEqual(self.faturamentoCemigBitencaNovo.custo_disponibilidade, 37.41)
 
     def test_obterIluminacaoPublica(self):
         self.assertEqual(self.faturamentoGoitacazesAbril.iluminacaoPublica,
@@ -221,6 +250,7 @@ class TesteFaturamento(TestCase):
         self.assertEqual(self.faturamentoUrbanoCopel.iluminacaoPublica, 41.78)
         self.assertEqual(self.faturamentoRuralCopelSemInjetada.iluminacaoPublica, 0)
         self.assertEqual(self.faturamentoRuralCopelComInjetada.iluminacaoPublica, 0)
+        self.assertEqual(self.faturamentoCemigBitencaNovo.iluminacaoPublica, 35.27)
 
     def test_franquia(self):
         self.assertEqual(self.faturamentoGoitacazesAbril.franquia, 0)
@@ -231,6 +261,7 @@ class TesteFaturamento(TestCase):
         self.assertEqual(self.faturamentoUrbanoCopel.franquia, 100)
         self.assertEqual(self.faturamentoRuralCopelSemInjetada.franquia, 0)
         self.assertEqual(self.faturamentoRuralCopelComInjetada.franquia, 100)
+        self.assertEqual(self.faturamentoCemigBitencaNovo.franquia, 50)
 
     def test_totalPagar(self):
         self.assertEqual(self.faturamentoGoitacazesAbril.totalPagar, 387.97)
@@ -242,6 +273,7 @@ class TesteFaturamento(TestCase):
         self.assertEqual(self.faturamentoUrbanoCopel.totalPagar, 845.76)
         self.assertEqual(self.faturamentoRuralCopelSemInjetada.totalPagar, 67.38)
         self.assertEqual(self.faturamentoRuralCopelComInjetada.totalPagar, 345.71)
+        self.assertEqual(self.faturamentoCemigBitencaNovo.totalPagar, 693.0699999999999)
 
     def test_valorConsumoSimulado(self):
         self.assertEqual(self.faturamentoGoitacazesAbril.valorConsumoSimulado,
@@ -255,6 +287,7 @@ class TesteFaturamento(TestCase):
         self.assertEqual(self.faturamentoUrbanoCopel.valorConsumoSimulado, 978.91)
         self.assertEqual(self.faturamentoRuralCopelSemInjetada.valorConsumoSimulado, 0)
         self.assertEqual(self.faturamentoRuralCopelComInjetada.valorConsumoSimulado, 493.09)
+        self.assertEqual(self.faturamentoCemigBitencaNovo.valorConsumoSimulado, 850.41)
 
     def test_totalSimulado(self):
         self.assertEqual(self.faturamentoGoitacazesAbril.totalSimulado,
@@ -268,6 +301,7 @@ class TesteFaturamento(TestCase):
         self.assertEqual(self.faturamentoUrbanoCopel.totalSimulado, 1020.69)
         self.assertEqual(self.faturamentoRuralCopelSemInjetada.totalSimulado, 67.38)
         self.assertEqual(self.faturamentoRuralCopelComInjetada.totalSimulado, 432.14)
+        self.assertEqual(self.faturamentoCemigBitencaNovo.totalSimulado, 885.68)
 
     def test_instalacao(self):
         self.assertEqual(self.faturamentoGoitacazesAbril.instalacao,
@@ -281,6 +315,7 @@ class TesteFaturamento(TestCase):
         self.assertEqual(self.faturamentoUrbanoCopel.instalacao, 96322217)
         self.assertEqual(self.faturamentoRuralCopelSemInjetada.instalacao, 106414518)
         self.assertEqual(self.faturamentoRuralCopelComInjetada.instalacao, 106414518)
+        self.assertEqual(self.faturamentoCemigBitencaNovo.instalacao, 3007557368)
     
     def test_extrairReferencia(self):
         self.assertEqual(self.faturamentoGoitacazesAbril.referencia,
@@ -294,6 +329,7 @@ class TesteFaturamento(TestCase):
         self.assertEqual(self.faturamentoUrbanoCopel.referencia, 'ABR/2022')
         self.assertEqual(self.faturamentoRuralCopelSemInjetada.referencia, 'MAR/2022')
         self.assertEqual(self.faturamentoRuralCopelComInjetada.referencia, 'ABR/2022')
+        self.assertEqual(self.faturamentoCemigBitencaNovo.referencia, 'JAN/2023')
 
     def test_extrairVencimento(self):
         self.assertEqual(self.faturamentoGoitacazesAbril.vencimento,
@@ -307,6 +343,7 @@ class TesteFaturamento(TestCase):
         self.assertEqual(self.faturamentoUrbanoCopel.vencimento, '23/04/2022')
         self.assertEqual(self.faturamentoRuralCopelSemInjetada.vencimento, '20/04/2022')
         self.assertEqual(self.faturamentoRuralCopelComInjetada.vencimento, '20/05/2022')
+        self.assertEqual(self.faturamentoCemigBitencaNovo.vencimento, '02/02/2023')
 
     def test_calculaEconomia(self):
         self.assertEqual(self.faturamentoGoitacazesAbril.economia_percentual,
@@ -320,4 +357,5 @@ class TesteFaturamento(TestCase):
         self.assertEqual(self.faturamentoUrbanoCopel.economia_percentual, 17.14)
         self.assertEqual(self.faturamentoRuralCopelSemInjetada.economia_percentual, 0)
         self.assertEqual(self.faturamentoRuralCopelComInjetada.economia_percentual, 17.53)
+        self.assertEqual(self.faturamentoCemigBitencaNovo.economia_percentual, 21.75)
 
