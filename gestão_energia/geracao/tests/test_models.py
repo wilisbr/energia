@@ -36,8 +36,23 @@ class TesteFaturamento(TestCase):
         self.faturamentoRuralCopelComInjetada = Faturamento()
         self.faturamentoCemigBitencaNovo= Faturamento()
         self.faturamentoCemigEstovaNovo= Faturamento()
-
+        self.faturamentoGoitacazesNova= Faturamento()
         #Carregando as contas 
+        self.faturamentoGoitacazesNova.carregarConta(
+            conta_pdf='geracao/tests/fatura_nova_gotacazes.pdf',
+            pdf2txt=cemig2.pdf2txt,
+            extrairPorte=cemig2.extrairPorte,
+            extrairHistoricoConsumo=cemig2.extrairHistoricoConsumo,
+            extrairEnergiaInjetada=cemig2.extrairEnergiaInjetada,
+            extrairCustoDisponibilidade=cemig2.extrairCustoDisponibilidade,
+            obterIluminacaoPublica=cemig2.obterIluminacaoPublica,
+            extrairNumeroInstalacao=cemig2.extrairNumeroInstalacao,
+            extrairReferencia=cemig2.extrairReferencia,
+            extrairVencimento=cemig2.extrairVencimento,
+            extrairSaldoResidual=cemig2.extrairSaldoResidual,
+            desconto=20,
+            bonus=30)
+
         self.faturamentoCemigBitencaNovo.carregarConta(
             conta_pdf='geracao/tests/fatura_nova_bitenca.pdf',
             pdf2txt=cemig2.pdf2txt,
@@ -52,7 +67,6 @@ class TesteFaturamento(TestCase):
             extrairSaldoResidual=cemig2.extrairSaldoResidual,
             desconto=20,
             bonus=30)
-        
         self.faturamentoCemigEstovaNovo.carregarConta(
             conta_pdf='geracao/tests/FaturaCEMIG_11022023.pdf',
             pdf2txt=cemig2.pdf2txt,
@@ -184,9 +198,14 @@ class TesteFaturamento(TestCase):
             desconto=20,
             bonus=0
         )
+
+        
         #print("setUp: Run once for every test method to setup clean data.")
         pass
 
+
+    def test_saldo_residual(self):
+        self.assertEqual(self.faturamentoGoitacazesNova.acerto,43.59)
 
     def test_extrairPorte(self):
         #print("Testando método extrairPorte()")

@@ -68,6 +68,8 @@ class Faturamento(models.Model):
         É comum em instalações rurais
     conta_pdf: file
         Arquivo PDF contendo a conta.
+    conta_txt: texto
+        Texto da conta extraído do PDF
     bonus : decimal
         Bônus de cortesia que foi dado pelo gerador ao cliente
     consumoSimulado : decimal
@@ -154,6 +156,7 @@ class Faturamento(models.Model):
     consumo_mes = models.FloatField(
                                       null=True,
                                       blank=True)
+    conta_txt = models.TextField(null=True, blank=True)
     economia_valor= models.FloatField(
                                       null=True,
                                       blank=True)
@@ -259,6 +262,7 @@ class Faturamento(models.Model):
         Atributos atualizados pelo método:
         acerto
         conta_pdf
+        conta_txt
         consumo_mes
         desconto
         bonus
@@ -294,6 +298,7 @@ class Faturamento(models.Model):
         self.bonus = kwargs.get('bonus', self.bonus)
         
         conta_txt = pdf2txt(self.conta_pdf.path, 0)
+        self.conta_txt=conta_txt
         self.porte = extrairPorte(conta_txt)
 
         self.injetada = extrairEnergiaInjetada(conta_txt)
