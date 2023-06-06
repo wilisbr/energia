@@ -157,10 +157,13 @@ def extrairEnergiaInjetada(pag1: str) -> float:
     ----------
 
     '''
+    print (pag1)
     injetada = extrairExpressaoRegular(r'Energia injetada HFPkWh[0-9 ,.]+', pag1)[0]
     
-    if injetada=='none':
-        return 0
+    if injetada=='none': #Tente a outra expressão regular, para contas mais novas
+        injetada = extrairExpressaoRegular(r'Energia compensada GD IkWh[0-9 ,.]+', pag1)[0]
+        if injetada=='none':
+            return 0 #Se mesmo assim não encontrar, não houve energia injetada
     
     injetada = extrairExpressaoRegular(r'\d[\.]?\d+', injetada)[0]
     return (injetada)
