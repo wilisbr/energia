@@ -27,7 +27,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'wilis.pythonanywhere.com', 'www.cwgestao.com.br', 'cwgestao.com.br', 'webapp-1358801.pythonanywhere.com']
 
-CORS_ALLOWED_ORIGINS = ['http://localhost:8080', 'http://localhost:8081', 'http://127.0.0.1:8000', 'https://wilis.pythonanywhere.com', 'https://webapp-1358801.pythonanywhere.com', 'https://www.cwgestao.com.br','http://webapp-1358801.pythonanywhere.com', 'http://www.cwgestao.com.br']
+CORS_ALLOWED_ORIGINS = ['http://localhost:8080', 'http://localhost:8081', 'http://127.0.0.1:8000', 'https://wilis.pythonanywhere.com', 'https://webapp-1358801.pythonanywhere.com', 'https://www.cwgestao.com.br','http://webapp-1358801.pythonanywhere.com', 'http://www.cwgestao.com.br', 'http://backend-cbhdacehna-uc.a.run.app']
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES':

@@ -1,0 +1,11 @@
+docker build -f Dockerfile -t geracao .
+docker run --name geracao --rm -it -p 8000:8000 geracao
+docker exec -it geracao /bin/bash
+docker image prune all
+
+
+gcloud auth configure-docker us-central1-docker.pkg.dev
+
+#Upload da imagem 'geracao' para google artfactory:
+docker tag geracao us-central1-docker.pkg.dev/cwgestao/images/geracao:latest 
+docker push us-central1-docker.pkg.dev/cwgestao/images/geracao:latest
