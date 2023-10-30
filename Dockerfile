@@ -10,10 +10,10 @@ RUN pip install mod_wsgi
 COPY . /code/
 
 # copy and install requirements first to leverage caching
-RUN pip install -r /code/gestão_energia/requirements.txt
+RUN pip install -r /code/gestao_energia/requirements.txt
 
 RUN chown -R www-data:www-data /code
 
 WORKDIR /code/gestao_energia
-CMD mod_wsgi-express start-server --locale C.UTF-8 --url-alias /static /code/static /code/gestão_energia/gestaoEnergia/wsgi.py --user www-data --group www-data
+CMD mod_wsgi-express start-server --locale C.UTF-8 --url-alias /static /code/static /code/gestao_energia/gestaoEnergia/wsgi.py --user www-data --group www-data
 
