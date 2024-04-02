@@ -13,6 +13,7 @@
           <tr> <td>Telefone</td> <td> <input v-model="cliente.telefone" required type="text" size="13" max="15"> </td></tr>
           <tr> <td>Desconto</td> <td> <input v-model="cliente.desconto" required type="number" min="0" max="100" step="1" size="3">%</td></tr>
           <tr> <td>Bônus</td> <td> R$ <input v-model="cliente.bonus" required type="number" min="0"  step="0.01"></td></tr>
+          <tr> <td>Chave Pix para cobrança:</td> <td> <input v-model="cliente.chave_pix_cobranca" required type="text" size="32" max=32></td></tr>
         </tbody>
       </table>
       <button @click="$router.push('/clientes')">Voltar</button>

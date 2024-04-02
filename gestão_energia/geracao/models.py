@@ -9,6 +9,8 @@ from reportlab.lib import pagesizes
 from reportlab.lib.colors import Color
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from pypix.pix import Pix
+
 
 currentdir = os.path.dirname(
     os.path.abspath(inspect.getfile(inspect.currentframe())))
@@ -42,6 +44,9 @@ class Cliente(models.Model):
         Percentual de desconto para o cliente, sob o valor da tarifa da concessionária
     bonus: decimal
         Valor, em R$, que será dado de bônus ao cliente em cada fatura
+    chave_pix_cobranca: string
+        Chave pix para onde o cliente irá destinar o pagamento da conta
+        Ex: charles.wilis@gmail.com
 
     """
     cpf_cliente = models.IntegerField()
@@ -52,7 +57,7 @@ class Cliente(models.Model):
     telefone = models.TextField(null=True, max_length=15, blank=True)
     desconto=models.FloatField(null=False,blank=False, default=20)
     bonus=models.FloatField(null=False,blank=False, default=0)
-
+    chave_pix_cobranca=models.CharField(null=True,blank=True, max_length=32)
     def gravar(self):
         self.save()
 
@@ -204,6 +209,24 @@ class Faturamento(models.Model):
     cpf_cliente = models.ForeignKey(Cliente, models.SET_NULL,
         blank=True,
         null=True)
+
+    def gerar_pix(self):
+        '''Gera a chave PIX de cobrança
+        input: none
+        output: string contendo a chave copia e cola
+        '''
+        if self.cpf_cliente is None or self.cpf_cliente.chave_pix_cobranca is None or self.totalPagar == 0:
+            return ''
+        
+        pix = Pix()
+        pix.set_name_receiver('cwgestao')
+        pix.set_city_receiver('BeloHorizonte')
+        pix.set_key(str(self.cpf_cliente.chave_pix_cobranca))
+        pix.set_identification(str(self.cpf_cliente.cpf_cliente))
+        pix.set_zipcode_receiver('30180072')
+        pix.set_description('')
+        pix.set_amount(self.totalPagar)
+        return pix.get_br_code()
 
     def baixarDadosCliente(self):
         '''
@@ -518,6 +541,13 @@ class Faturamento(models.Model):
         c.roundRect(470, 305,60,20,3,stroke=1,fill=0)
         c.drawRightString(520,340,"A fatura da concessionária será paga por nós.")
         c.drawRightString(445,355,"Não pague em duplicidade.!")
+
+        chave_pix=self.gerar_pix()
+        c.drawRightString(450,400,'Faça o pagamento com o Pix copia e cola abaixo:')
+        c.setFont("Times-Bold",6.3)
+        c.drawRightString(550,415,chave_pix)
+        c.setFont("Times-Bold",10)
+        #c.drawRightString(380,450,'Ou leia o QR Code PIX abaixo:')
 
         c.showPage()
         # Saving the PDF
