@@ -1,0 +1,9 @@
+version: '3.8'
+
+services:
+  vue_app:
+    build:
+      context: .
+    container_name: vue_app_energia
+    ports:
+      - "8080:8080"  # Exponha o Nginx na porta 8080

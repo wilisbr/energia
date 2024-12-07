@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  vue_app:
+    build:
+      context: ./frontend # Caminho para o diretório Vue
+      dockerfile: Dockerfile # Se o Dockerfile estiver no diretório correto
+      args:
+          VUE_APP_DASHBOARD_URL: ${VUE_APP_DASHBOARD_URL} # Pegue do ambiente do host
+    container_name: vue_app_energia
+    ports:
+      - "8080:8080"  # Exponha o Nginx na porta 8080
+    networks:
+      - app_network  # Especifica a rede para o Vue
+    depends_on:
+      - django
+    env_file:
+      - .env # Diretiva para carregar variáveis do arquivo .env
+
+
+  django:
+    build:
+      context: ./gestao_energia
+    container_name: django_app_energia
+    env_file:
+      - .env
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+      - static:/app/static  # Verifique se você tem esse volume
+    networks:
+      - app_network  # Especifica a rede para o Django
+
+networks:
+  app_network:
+    driver: bridge
+
+volumes:
+  static:  # Declaração do volume nomeado "staticfiles"
