@@ -9,7 +9,7 @@ services:
           VUE_APP_DASHBOARD_URL: ${VUE_APP_DASHBOARD_URL} # Pegue do ambiente do host
     container_name: vue_app_energia
     ports:
-      - "8080:8080"  # Exponha o Nginx na porta 8080
+      - "80:80"  # Exponha o Nginx na porta 8080
     networks:
       - app_network  # Especifica a rede para o Vue
     depends_on:
