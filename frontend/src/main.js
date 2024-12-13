@@ -17,7 +17,7 @@ if (window.location.href.startsWith('http://localhost')){
     axios.defaults.baseURL = 'http://127.0.0.1:8000'
 } else {
     //axios.defaults.baseURL = 'http://wilis.pythonanywhere.com'
-    axios.defaults.baseURL = 'http://docker1.vps.webdock.cloud:8000'
+    axios.defaults.baseURL = 'http://www.cwgestao.com.br:8000'
 }
 
 //axios.defaults.baseURL = 'http://127.0.0.1:8000'
