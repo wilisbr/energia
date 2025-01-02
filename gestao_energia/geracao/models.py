@@ -1,5 +1,4 @@
 from django.db import models
-import PyPDF2
 from django.forms import EmailField
 import numpy as np
 import math
@@ -300,16 +299,26 @@ class Faturamento(models.Model):
         ----------
 
         '''
+        
         pdf2txt = kwargs.get('pdf2txt', False)
+        
         extrairPorte = kwargs.get('extrairPorte', False)
+        
         extrairHistoricoConsumo = kwargs.get('extrairHistoricoConsumo', False)
+        
         extrairNumeroInstalacao = kwargs.get('extrairNumeroInstalacao', False)
+        
         extrairEnergiaInjetada = kwargs.get('extrairEnergiaInjetada', False)
+        
         extrairReferencia = kwargs.get('extrairReferencia', False)
+        
         extrairSaldoResidual=kwargs.get('extrairSaldoResidual',False)
+        
         extrairVencimento = kwargs.get('extrairVencimento', False)
+        
         extrairCustoDisponibilidade = kwargs.get('extrairCustoDisponibilidade',
                                                  False)
+        
         obterIluminacaoPublica = kwargs.get('obterIluminacaoPublica', False)
         
         if ((kwargs.get('conta_pdf') == None) and (self.conta_pdf==None)):
@@ -320,21 +329,32 @@ class Faturamento(models.Model):
         self.desconto = kwargs.get('desconto', self.desconto)
         self.bonus = kwargs.get('bonus', self.bonus)
         
+        print ('Transformando em txt')
         conta_txt = pdf2txt(self.conta_pdf.path, 0)
         self.conta_txt=conta_txt
+        print ('Extraindo o porte')
         self.porte = extrairPorte(conta_txt)
 
+        print ('Extraindo quantidade injetada')
         self.injetada = extrairEnergiaInjetada(conta_txt)
+        print ('Extraindo número da instalação')
         self.instalacao = extrairNumeroInstalacao(conta_txt)
+        print ('Extraindo custo de disponibilidade')
         self.custo_disponibilidade = extrairCustoDisponibilidade(conta_txt)[0]
         self.custo_disponibilidade_simulado = extrairCustoDisponibilidade(conta_txt)[0]
         self.energia_da_concessionaria = extrairCustoDisponibilidade(
             conta_txt)[1]
-        self.referencia= extrairReferencia(conta_txt)
-        self.acerto=extrairSaldoResidual(conta_txt)
         self.tarifa = extrairCustoDisponibilidade(conta_txt)[2]
+        print ('Extraindo mês de referência')
+        self.referencia= extrairReferencia(conta_txt)
+        print ('Extraindo saldo residual')
+        self.acerto=extrairSaldoResidual(conta_txt)
+
+        print ('Extraindo data de vencimento')
         self.vencimento = extrairVencimento(conta_txt)
+        print ('Extraindo valor da iluminação pública')
         self.iluminacaoPublica = obterIluminacaoPublica(conta_txt)
+        print ('Extraindo histórico de consumo')
         consumos_mensais = extrairHistoricoConsumo(conta_txt)
         self.consumo_mes = consumos_mensais[0]
 

@@ -21,6 +21,7 @@
           <select required v-model="distribuidora">
             <option value="cemig">Cemig até 2022</option>
             <option value="cemig2">Cemig pós 2023</option>
+            <option value="cemig3">Cemig pós 2024</option>
             <option value="copel">Copel</option>
           </select>
           <br><br>
