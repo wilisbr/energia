@@ -265,8 +265,15 @@ def extrairSaldoResidual(pag1: str) -> float:
     textos_creditos_e_debitos = extrairExpressaoRegular(r'Restituição de Pagamento\s+-\d+,{0,1}\d*',
                                                 pag1)[0]
     if (textos_creditos_e_debitos!='none'):
-        saldo_residual=extrairExpressaoRegular(r'\d+,\d+',textos_creditos_e_debitos)[0]
+        saldo_residual=saldo_residual+extrairExpressaoRegular(r'\d+,\d+',textos_creditos_e_debitos)[0]
+
+    textos_conta_anterior = extrairExpressaoRegular(r'Cobrança da Conta de Energia de \d+ \/ \d+\s+\d+,{0,1}\d*',
+                                                pag1)[0]
+    if (textos_creditos_e_debitos!='none'):
+        saldo_residual=saldo_residual+extrairExpressaoRegular(r'\d+,\d+',textos_conta_anterior)[0]
+    
     return saldo_residual
+
 
 
 def gerarContaComFotovotaica(pdf_conta: str, desconto=0.2, bonus=0) -> float:
