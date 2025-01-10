@@ -265,13 +265,12 @@ def extrairSaldoResidual(pag1: str) -> float:
     textos_creditos_e_debitos = extrairExpressaoRegular(r'Restituição de Pagamento\s+-\d+,{0,1}\d*',
                                                 pag1)[0]
     if (textos_creditos_e_debitos!='none'):
-        saldo_residual=saldo_residual+extrairExpressaoRegular(r'\d+,\d+',textos_creditos_e_debitos)[0]
+        saldo_residual=saldo_residual-extrairExpressaoRegular(r'\d+,\d+',textos_creditos_e_debitos)[0]
 
     textos_conta_anterior = extrairExpressaoRegular(r'Cobrança da Conta de Energia de \d+ \/ \d+\s+\d+,{0,1}\d*',
                                                 pag1)[0]
-    if (textos_creditos_e_debitos!='none'):
+    if (textos_conta_anterior!='none'):
         saldo_residual=saldo_residual+extrairExpressaoRegular(r'\d+,\d+',textos_conta_anterior)[0]
-    
     return saldo_residual
 
 
