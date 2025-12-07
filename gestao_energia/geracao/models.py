@@ -209,6 +209,7 @@ class Faturamento(models.Model):
         blank=True,
         null=True)
 
+
     def gerar_pix(self):
         '''Gera a chave PIX de cobrança
         input: none
@@ -225,6 +226,14 @@ class Faturamento(models.Model):
         pix.set_zipcode_receiver('30180072')
         pix.set_description('')
         pix.set_amount(self.totalPagar)
+
+        # Gera e salva QR Code estilizado com ou sem logo
+        base64qr = pix.save_qrcode(
+            output='/tmp/'+str(self.cpf_cliente.cpf_cliente)+'.png',
+            box_size=7,
+            border=1,
+        )
+
         return pix.get_br_code()
 
     def baixarDadosCliente(self):
@@ -567,7 +576,11 @@ class Faturamento(models.Model):
         c.setFont("Times-Bold",6.3)
         c.drawRightString(550,415,chave_pix)
         c.setFont("Times-Bold",10)
-        #c.drawRightString(380,450,'Ou leia o QR Code PIX abaixo:')
+        
+        if self.cpf_cliente.cpf_cliente:
+            c.drawRightString(380,450,'Ou leia o QR Code PIX abaixo:')
+            # Inserting Logo into the Canvas at required position
+            c.drawImage('/tmp/'+str(self.cpf_cliente.cpf_cliente)+'.png',280,455,width=70,height=70)
 
         c.showPage()
         # Saving the PDF
