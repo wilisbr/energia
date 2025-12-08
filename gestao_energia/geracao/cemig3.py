@@ -209,15 +209,32 @@ def extrairCustoDisponibilidade(pag1: str) -> float:
     ----------
 
     '''
-
+    #breakpoint()
     linha_consumo_concessionaria = extrairExpressaoRegular(
         r'Energia ElétricakWh[0-9 ,]+', pag1)[0]
-    valor_energia_concessionaria = extrairExpressaoRegular(
-        '[0-9]+,[0-9]+', linha_consumo_concessionaria)[1]
-    quantidade_kwh_concessionaria = extrairExpressaoRegular(
-        '[0-9]+', linha_consumo_concessionaria)[0]  #nao houve creditos
-    tarifa_energia_concessionaria = extrairExpressaoRegular(
-        '[0-9]+,[0-9]+', linha_consumo_concessionaria)[0]
+    #linha_consumo_concessionaria= extrairExpressaoRegular(r"(?:Energia ElétricakWh\s*[0-9 ,]+|Custo de Disponibilidade\s*[0-9 ,]+)",pag1)[0]
+    if (linha_consumo_concessionaria!='none'):
+    
+        valor_energia_concessionaria = extrairExpressaoRegular(
+            '[0-9]+,[0-9]+', linha_consumo_concessionaria)[1]
+        quantidade_kwh_concessionaria = extrairExpressaoRegular(
+            '[0-9]+', linha_consumo_concessionaria)[0]  #nao houve creditos
+        tarifa_energia_concessionaria = extrairExpressaoRegular(
+            '[0-9]+,[0-9]+', linha_consumo_concessionaria)[0]
+    else:
+        #Caso a conta seja bugada e venha escrito 'Custo de Disponibilidade, ao invés de Energia Elétrica, sobrescreva tudo:
+        linha_consumo_concessionaria = extrairExpressaoRegular(
+            r'Custo de Disponibilidade\s*[0-9 ,]+', pag1)[0]
+        valor_energia_concessionaria = extrairExpressaoRegular(
+            '[0-9]+,[0-9]+', linha_consumo_concessionaria)[0]
+        match extrairPorte(pag1):
+            case 'Monofásico':
+                quantidade_kwh_concessionaria=30
+            case 'Bifásico':
+                quantidade_kwh_concessionaria=50
+            case 'Trifásico':
+                quantidade_kwh_concessionaria=100
+        tarifa_energia_concessionaria=valor_energia_concessionaria/quantidade_kwh_concessionaria
 
     return ((valor_energia_concessionaria, quantidade_kwh_concessionaria,
              tarifa_energia_concessionaria))
