@@ -341,6 +341,7 @@ class Faturamento(models.Model):
         print ('Transformando em txt')
         conta_txt = pdf2txt(self.conta_pdf.path, 0)
         self.conta_txt=conta_txt
+        #print (self.conta_txt)
         print ('Extraindo o porte')
         self.porte = extrairPorte(conta_txt)
 

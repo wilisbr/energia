@@ -10,7 +10,7 @@ from rest_framework import status
 
 from geracao.models import *
 from geracao.serializers import *
-import cemig, cemig2, cemig3, copel
+import cemig, cemig2, cemig3, cemig4, copel
 
 # Create your views here.
 class FaturamentosViewSet (ModelViewSet):
@@ -68,6 +68,8 @@ def carregarConta(request):
     id=request.data['id']
     print (id)
     faturamento = Faturamento.objects.filter(id__exact=id)[0]
+    #breakpoint()
+    
     try:
         if (faturamento.distribuidora == 'cemig'):
             faturamento.carregarConta(pdf2txt=cemig.pdf2txt,
@@ -113,9 +115,24 @@ def carregarConta(request):
                     extrairReferencia=cemig3.extrairReferencia,
                     extrairVencimento=cemig3.extrairVencimento,
                     extrairSaldoResidual=cemig3.extrairSaldoResidual)
+        elif (faturamento.distribuidora=='cemig4'):
+            print ("Cheguei aqui 2!!!!")
+            faturamento.carregarConta(pdf2txt=cemig4.pdf2txt,
+                    extrairPorte=cemig4.extrairPorte,
+                    extrairHistoricoConsumo=cemig4.extrairHistoricoConsumo,
+                    extrairEnergiaInjetada=cemig4.extrairEnergiaInjetada,
+                    extrairCustoDisponibilidade=cemig4.extrairCustoDisponibilidade,
+                    obterIluminacaoPublica=cemig4.obterIluminacaoPublica,
+                    extrairNumeroInstalacao=cemig4.extrairNumeroInstalacao,
+                    extrairReferencia=cemig4.extrairReferencia,
+                    extrairVencimento=cemig4.extrairVencimento,
+                    extrairSaldoResidual=cemig4.extrairSaldoResidual)
         faturamento.save()
-    except:
-        print ("erro!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1")
+    except Exception as e:
+        #Imprimir na tela o erro que veio na exceção, para ajudar a identificar o problema:
+
+        print ("erro!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+        print (e)
         return Response({'Erro': 'Houve um problema ao carregar a conta. Certifique-se de que escolheu corretamente a distribuidora ou entre em contato com o desenvolvedor cwgestao@aol.com.'},
                  status=status.HTTP_400_BAD_REQUEST)
 
